@@ -12,8 +12,8 @@ export default function Hero() {
       id="section-0" 
       className="relative h-screen w-full flex items-center justify-start px-6 md:px-20 overflow-hidden pointer-events-none"
     >
-      {/* pointer-events-none on the container allows you to click 
-        and drag the 3D model BEHIND the text. 
+      {/* NOTE: 'pointer-events-none' on the section allows clicks to pass through 
+        to the 3D canvas behind. We must re-enable pointer-events on the buttons below.
       */}
 
       <div className="flex flex-col items-start z-10 max-w-4xl">
@@ -58,6 +58,39 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1 }}
-          className="flex flex-wrap gap-6 mt-12 pointer-events-auto"
+          className="flex flex-wrap gap-6 mt-12 pointer-events-auto" // Re-enable clicks here
         >
-          {/* Button A: Triggers RED Mode */}
+          {/* Button A: Triggers RED Mode (Aggressive) */}
+          <Button 
+            variant="aggressive" 
+            onMouseEnter={() => setMode('aggressive')} // Turns stadium Red
+            onMouseLeave={() => setMode('idle')}       // Returns to dark
+            onClick={() => {
+              const statsSection = document.getElementById('section-1');
+              if (statsSection) statsSection.scrollIntoView({ behavior: 'smooth' });
+            }}
+          >
+            Chase Master
+          </Button>
+
+          {/* Button B: Triggers BLUE Mode (Classic) */}
+          <Button 
+            variant="secondary"
+            onMouseEnter={() => setMode('classic')}    // Turns stadium Blue
+            onMouseLeave={() => setMode('idle')}       // Returns to dark
+            onClick={() => {
+              const careerSection = document.getElementById('section-2');
+              if (careerSection) careerSection.scrollIntoView({ behavior: 'smooth' });
+            }}
+          >
+            Career Journey
+          </Button>
+        </motion.div>
+
+      </div>
+
+      {/* 5. Decorative Background Element (Optional Glow) */}
+      <div className="absolute right-0 bottom-0 w-1/2 h-1/2 bg-gradient-radial from-vk-gold/10 to-transparent opacity-50 blur-3xl -z-10" />
+    </section>
+  );
+}
