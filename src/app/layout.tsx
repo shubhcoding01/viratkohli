@@ -3,7 +3,6 @@ import { Bebas_Neue, Inter } from "next/font/google";
 // @ts-ignore: allow importing global css
 import "./globals.css"; 
 import { cn } from "@/lib/utils"; // Ensure this points to your utils file
-import SmoothScroll from "@/components/dom/SmoothScroll"; // Import the wrapper we just made
 
 // 1. Configure "Jersey Number" Font (Headings)
 const bebas = Bebas_Neue({ 
@@ -72,9 +71,7 @@ export default function RootLayout({
         inter.variable, 
         "antialiased bg-vk-black text-white selection:bg-vk-gold selection:text-vk-black overflow-x-hidden"
       )}>
-        <SmoothScroll>
-          {children}
-        </SmoothScroll>
+        {children}
       </body>
     </html>
   );

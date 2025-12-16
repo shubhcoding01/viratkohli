@@ -1,136 +1,106 @@
-// 'use client';
-
-// import { Canvas } from '@react-three/fiber';
-// import { OrbitControls, Preload } from '@react-three/drei';
-// import { Suspense } from 'react';
-// import { useStore } from '@/store/useStore';
-// import ViratModel from './ViratModel';
-// import StadiumModel from './StadiumModel';
-// import PostProcessing from './PostProcessing';
-
-// export default function Scene() {
-//   const { mode } = useStore();
-
-//   return (
-//     // 1. The 3D Window (Canvas)
-//     // shadows: Enables realistic shadow calculations
-//     // dpr: Device Pixel Ratio (Maintains sharpness on high-res screens)
-//     // gl: Configures the renderer for cinematic colors
-//     <div id="canvas-container" className="fixed inset-0 z-0">
-//       <Canvas
-//         shadows
-//         dpr={[1, 2]} 
-//         camera={{ position: [0, 2, 6], fov: 45 }}
-//         gl={{ antialias: false }} // We let PostProcessing handle antialiasing
-//       >
-//         {/* 2. Controls 
-//             enableZoom={false}: Prevents breaking the immersion
-//             maxPolarAngle: Prevents the camera from going under the floor
-//         */}
-//         <OrbitControls 
-//           enableZoom={false} 
-//           enablePan={false} 
-//           maxPolarAngle={Math.PI / 2 - 0.1} // Stop at ground level
-//           autoRotate={mode === 'idle'} // Only rotate when idle
-//           autoRotateSpeed={0.5}
-//         />
-
-//         {/* 3. The World 
-//             Suspense waits for the 3D models to load before showing anything.
-//             While loading, it shows 'null' (The LoadingScreen handles the UI).
-//         */}
-//         <Suspense fallback={null}>
-//           <StadiumModel />
-//           <ViratModel />
-//           <PostProcessing />
-          
-//           {/* Preload assets so they don't pop in later */}
-//           <Preload all />
-//         </Suspense>
-
-//       </Canvas>
-//     </div>
-//   );
-// }
-
 'use client';
 
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Preload, BakeShadows, AdaptiveDpr, CameraShake } from '@react-three/drei';
-import { Suspense, useEffect, useState } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Preload, BakeShadows, AdaptiveDpr, Environment, ContactShadows, useTexture } from '@react-three/drei';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import * as THREE from 'three';
 import { useStore } from '@/store/useStore';
 import ViratModel from './ViratModel';
-import StadiumModel from './StadiumModel';
-import Effects from './Effects'; // 👈 Using your Advanced Effects file
+import TrophyModel from './TrophyModel'; // New Component for the Trophy
+import Effects from './Effects'; 
+
+// --- ADVANCED FEATURE: CINEMATIC CAMERA RIG ---
+// Flies the camera to different angles based on the "Mode"
+function CameraRig() {
+  const { mode } = useStore();
+  const vec = new THREE.Vector3();
+
+  useFrame((state) => {
+    // 1. Define Target Positions
+    let targetPos = [0, 1.5, 6]; // Default: Front View
+    let targetLookAt = [0, 1, 0];
+
+    if (mode === 'aggressive') {
+       // Zoom in tight for "Aggressive" mode (Trophy/Action view)
+       targetPos = [2, 1, 4];
+       targetLookAt = [0, 0.5, 0];
+    } else if (mode === 'classic') {
+       // Side angle for "Classic" stance
+       targetPos = [-3, 1.5, 5];
+    }
+
+    // 2. Smoothly Interpolate Camera Position (The "Fly" effect)
+    state.camera.position.lerp(vec.set(targetPos[0], targetPos[1], targetPos[2]), 0.05);
+    state.camera.lookAt(targetLookAt[0], targetLookAt[1], targetLookAt[2]);
+  });
+  return null;
+}
+
+// --- ADVANCED FEATURE: REALISTIC GRASS PITCH ---
+function RealisticPitch() {
+  // Load texture with anisotropic filtering for sharpness at angles
+  const texture = useTexture('/textures/pitch-grass.png');
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(15, 15); // Tile it 15 times so it's high-res
+  
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.05, 0]} receiveShadow>
+      <planeGeometry args={[50, 50]} />
+      <meshStandardMaterial 
+        map={texture}
+        roughness={1} 
+        color="#888" // Darken it slightly for night mode
+      />
+    </mesh>
+  );
+}
 
 export default function Scene() {
   const { mode } = useStore();
-  const [shakeIntensity, setShakeIntensity] = useState(0);
-
-  // Logic: Increase camera shake when in "Aggressive" mode
-  useEffect(() => {
-    if (mode === 'aggressive') {
-      setShakeIntensity(1.5); // High energy vibration
-    } else {
-      setShakeIntensity(0);   // Calm
-    }
-  }, [mode]);
 
   return (
     <div id="canvas-container" className="fixed inset-0 z-0 pointer-events-auto">
       <Canvas
         shadows
-        dpr={[1, 2]} // Support high-res Retina displays
+        dpr={[1, 1.5]}
+        gl={{ antialias: false, powerPreference: "high-performance" }}
         camera={{ position: [0, 1.5, 6], fov: 45 }}
-        gl={{ 
-          antialias: false, // OFF for better Post-Processing performance
-          powerPreference: "high-performance",
-          stencil: false,
-          depth: true
-        }}
       >
-        {/* 1. Intelligent Controls 
-            - autoRotate: Spins slowly when idle
-            - enableZoom: FALSE (keeps the "App" feel)
-        */}
-        <OrbitControls 
-          makeDefault
-          enableZoom={false} 
-          enablePan={false} 
-          maxPolarAngle={Math.PI / 2 - 0.05} // Don't go below ground
-          minPolarAngle={Math.PI / 3}        // Don't look too high up
-          autoRotate={mode === 'idle'} 
-          autoRotateSpeed={0.8}
+        {/* 1. The Director (Controls Camera Movement) */}
+        <CameraRig />
+
+        {/* 2. Global Lighting (Stadium Night Vibe) */}
+        <Environment preset="city" blur={0.6} />
+        <ambientLight intensity={0.5} />
+        <spotLight 
+          position={[10, 10, 5]} 
+          angle={0.15} 
+          penumbra={1} 
+          intensity={mode === 'aggressive' ? 800 : 400} 
+          color={mode === 'aggressive' ? '#ff0000' : '#ffffff'} 
+          castShadow 
         />
 
-        {/* 2. Dynamic Camera Shake (The "Stadium Energy" Effect) */}
-        <CameraShake 
-          maxYaw={0.05 * shakeIntensity} // Horizontal shake
-          maxPitch={0.05 * shakeIntensity} // Vertical shake
-          maxRoll={0.05 * shakeIntensity} // Tilt shake
-          yawFrequency={0.5 * shakeIntensity} 
-          pitchFrequency={0.5 * shakeIntensity} 
-          rollFrequency={0.5 * shakeIntensity} 
-          intensity={shakeIntensity}
-          decay={true}
-          decayRate={0.65}
-        />
-
-        {/* 3. Performance Optimizers (Crucial for Mobile) */}
-        <AdaptiveDpr pixelated /> {/* Lowers resolution while moving camera */}
-        <BakeShadows />           {/* Calculates shadows once to save GPU */}
-
-        {/* 4. The World */}
+        {/* 3. The Stage */}
         <Suspense fallback={null}>
-          <StadiumModel />
-          <ViratModel />
+          <RealisticPitch />
           
-          {/* The Advanced Cinematic Lens */}
-          <Effects /> 
+          {/* LOGIC: Swap Models based on interaction */}
+          {mode === 'aggressive' ? (
+             <TrophyModel /> 
+          ) : (
+             <ViratModel />
+          )}
+
+          {/* High Quality Floor Shadows */}
+          <ContactShadows position={[0, 0.01, 0]} opacity={0.6} scale={10} blur={2} far={4} />
           
+          <Effects />
           <Preload all />
         </Suspense>
 
+        <BakeShadows />
+        <AdaptiveDpr pixelated />
       </Canvas>
     </div>
   );
