@@ -35,8 +35,9 @@
 
 import type { Metadata } from "next";
 import { Bebas_Neue, Inter } from "next/font/google";
-import "./globals.css";
-import { cn } from "@/lib/utils";
+// @ts-ignore: allow importing global css without type declarations
+import "./globals.css"; 
+import { cn } from "../lib/utils";
 
 // 1. Configure the "Jersey Number" Font (Headings)
 const bebas = Bebas_Neue({ 
