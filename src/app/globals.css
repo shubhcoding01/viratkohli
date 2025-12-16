@@ -1,4 +1,4 @@
-@import "tailwindcss";
+/* @import "tailwindcss";
 
 :root {
   --background: #ffffff;
@@ -23,4 +23,79 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+} */
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* These CSS variables are injected by layout.tsx, 
+     but we set defaults here just in case */
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 5, 5, 5;
+  --background-end-rgb: 0, 0, 0;
+}
+
+/* 1. Base Setup */
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  
+  /* Critical for performance */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* Hide overflow because we control scrolling via Lenis */
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* 2. Hide Default Scrollbar (Chrome/Safari/Opera) */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide Default Scrollbar (IE, Edge, Firefox) */
+body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* 3. Utility: Glassmorphism Card Effect */
+/* Use this class for stats cards to get that 'Frosted Glass' look */
+@layer utilities {
+  .glass-panel {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-xl;
+  }
+  
+  .text-glow {
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); /* Gold Glow */
+  }
+}
+
+/* 4. Canvas Container */
+/* Ensures the 3D scene stays fixed behind everything */
+#canvas-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1; /* Behind UI */
+  pointer-events: all; /* Allows clicking 3D objects */
+}
+
+/* 5. Selection Color */
+/* If user highlights text, it should be Gold */
+::selection {
+  background: #D4AF37;
+  color: #000;
 }
