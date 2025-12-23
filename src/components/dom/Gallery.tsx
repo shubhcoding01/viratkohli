@@ -173,6 +173,7 @@ import Image from 'next/image';
 import { useRef } from 'react';
 import { cn } from '@/lib/utils';
 
+// Images 1 to 17 go in the scroll gallery. 
 const galleryImages = Array.from({ length: 17 }, (_, i) => i + 1);
 
 // THE CINEMATIC TEXT CONTENT
@@ -196,66 +197,69 @@ export default function Gallery() {
     offset: ['start start', 'end end']
   });
 
-  // 2. HORIZONTAL MOVEMENT
-  const x1 = useTransform(scrollYProgress, [0, 1], ["5%", "-45%"]);
-  const x2 = useTransform(scrollYProgress, [0, 1], ["-45%", "5%"]);
+  // 2. HORIZONTAL MOVEMENT (Images)
+  // Row 1: Moves Left
+  const x1 = useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]);
+  // Row 2: Moves Right
+  const x2 = useTransform(scrollYProgress, [0, 1], ["-50%", "0%"]);
 
-  // 3. VERTICAL 3D TEXT CRAWL
+  // 3. VERTICAL 3D TEXT MOVEMENT
+  // Text starts below (120%) and scrolls far up (-250%)
   const textY = useTransform(scrollYProgress, [0, 1], ["120%", "-250%"]);
 
   const topRowImages = galleryImages.slice(0, 9);
   const bottomRowImages = galleryImages.slice(9, 17).reverse();
 
-  // Shared Image Styles
-  const imageContainerClass = "relative h-[45vh] w-[35vh] md:h-[55vh] md:w-[45vh] flex-shrink-0 rounded-lg overflow-hidden group bg-gray-900 border border-white/10";
-  
-  // UPDATED: No opacity fade, just pure Grayscale -> Color transition
-  const imageClass = "object-contain p-2 grayscale group-hover:grayscale-0 transition-all duration-700 scale-95 group-hover:scale-105";
+  // IMAGE STYLING:
+  // object-contain: Shows the full image without cutting.
+  // bg-white/5: Adds a subtle glass box frame around the image so it looks neat.
+  const imageContainerClass = "relative w-[300px] h-[400px] md:w-[400px] md:h-[500px] flex-shrink-0 rounded-lg overflow-hidden group border border-white/10 bg-white/5";
+  const imageClass = "object-contain p-4 grayscale group-hover:grayscale-0 transition-all duration-700 scale-95 group-hover:scale-105 opacity-40 group-hover:opacity-100 transition-opacity";
 
   return (
     <>
-      {/* SECTION A: THE LOCKED GALLERY & 3D CRAWL */}
-      <section ref={containerRef} className="relative h-[350vh] bg-vk-black">
+      {/* SECTION A: THE LOCKED GALLERY & TEXT OVERLAY */}
+      <section ref={containerRef} className="relative h-[300vh] bg-vk-black">
         
         <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
           
-          {/* Static Title Overlay */}
-          <div className="absolute top-10 left-6 md:left-20 z-30 opacity-30 mix-blend-overlay pointer-events-none">
-            <h2 className="font-heading text-3xl md:text-5xl text-white">
+          {/* Static Title (Faded Background) */}
+          <div className="absolute top-10 left-6 md:left-20 z-10 opacity-30 mix-blend-overlay pointer-events-none">
+            <h2 className="font-heading text-4xl md:text-6xl text-white">
               THE ARCHIVES
             </h2>
           </div>
 
-          {/* --- THE 3D MOVIE TEXT CRAWL LAYER --- */}
-          {/* Using the Center Focus Mask */}
-          <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none perspective-[1000px]
-                          [mask-image:linear-gradient(to_bottom,transparent_0%,black_35%,black_65%,transparent_100%)]">
-              
-              <motion.div 
-                style={{ 
-                  y: textY, 
-                  rotateX: "30deg", 
-                }}
-                className="max-w-4xl text-center font-serif uppercase tracking-[0.2em] leading-loose drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]
-                           bg-gradient-to-b from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-transparent"
-              >
-                {crawlText.map((line, index) => (
-                  <p key={index} className={cn(
-                    "py-6 md:py-10 shadow-black drop-shadow-lg", // Added shadow to make text readable over images
-                    index === 0 ? "text-5xl md:text-7xl font-bold" : "text-2xl md:text-4xl font-semibold",
-                    index === crawlText.length - 1 ? "text-5xl md:text-6xl font-bold mt-10" : ""
-                  )}>
-                    {line}
-                  </p>
-                ))}
-              </motion.div>
+          {/* --- LAYER 1: THE 3D TEXT CRAWL (ON TOP) --- */}
+          {/* We use a mask so text fades in at the center and fades out at top/bottom */}
+          <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none perspective-[1000px] 
+                          [mask-image:linear-gradient(to_bottom,transparent_0%,black_30%,black_70%,transparent_100%)]">
+            
+            <motion.div 
+              style={{ 
+                y: textY, 
+                rotateX: "25deg", // The Star Wars Tilt
+              }}
+              // 3D Gold Gradient Text
+              className="max-w-4xl text-center font-serif uppercase tracking-[0.2em] leading-loose drop-shadow-[0_4px_4px_rgba(0,0,0,1)]
+                         bg-gradient-to-b from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-transparent"
+            >
+              {crawlText.map((line, index) => (
+                <p key={index} className={cn(
+                  "py-8 md:py-12 px-4 shadow-black drop-shadow-2xl",
+                  index === 0 ? "text-5xl md:text-7xl font-bold" : "text-2xl md:text-3xl font-semibold",
+                  index === crawlText.length - 1 ? "text-5xl md:text-6xl font-bold mt-10" : ""
+                )}>
+                  {line}
+                </p>
+              ))}
+            </motion.div>
           </div>
 
-          {/* --- BACKGROUND MOVING IMAGES --- */}
-          {/* REMOVED: blur-[2px] class so images are sharp */}
-          <div className="flex flex-col gap-8 relative z-10">
+          {/* --- LAYER 2: THE MOVING IMAGES (BEHIND TEXT) --- */}
+          <div className="flex flex-col gap-8 relative z-20">
             
-            {/* ROW 1 (Moves Left) */}
+            {/* ROW 1: Images 1 -> 9 (Moves Left) */}
             <motion.div style={{ x: x1 }} className="flex gap-6 w-max pl-6">
               {topRowImages.map((num) => (
                 <div key={num} className={imageContainerClass}>
@@ -263,13 +267,17 @@ export default function Gallery() {
                     src={`/images/virat${num}.jpg`}
                     alt={`Memory ${num}`}
                     fill
-                    className={imageClass}
+                    className={imageClass} // Shows Full Image
                   />
+                  {/* Number Watermark */}
+                  <span className="absolute bottom-4 right-4 text-5xl text-white/10 font-heading font-bold">
+                    {num}
+                  </span>
                 </div>
               ))}
             </motion.div>
 
-            {/* ROW 2 (Moves Right) */}
+            {/* ROW 2: Images 17 -> 10 (Moves Right) */}
             <motion.div style={{ x: x2 }} className="flex gap-6 w-max pr-6">
               {bottomRowImages.map((num) => (
                 <div key={num} className={imageContainerClass}>
@@ -277,8 +285,11 @@ export default function Gallery() {
                     src={`/images/virat${num}.jpg`}
                     alt={`Memory ${num}`}
                     fill
-                    className={imageClass}
+                    className={imageClass} // Shows Full Image
                   />
+                  <span className="absolute bottom-4 right-4 text-5xl text-white/10 font-heading font-bold">
+                    {num}
+                  </span>
                 </div>
               ))}
             </motion.div>
@@ -294,7 +305,7 @@ export default function Gallery() {
             src="/images/virat18.jpg"
             alt="The Perfect Cover Drive"
             fill
-            className="object-cover" 
+            className="object-cover"
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-vk-black via-black/50 to-transparent" />
