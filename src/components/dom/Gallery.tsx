@@ -345,3 +345,376 @@ export default function Gallery() {
     </>
   );
 }
+
+
+// 'use client';
+
+// import { motion, useScroll, useTransform } from 'framer-motion';
+// import Image from 'next/image';
+// import { useRef } from 'react';
+// import { cn } from '@/lib/utils';
+
+// // Images 1 → 17
+// const galleryImages = Array.from({ length: 17 }, (_, i) => i + 1);
+
+// // CINEMATIC VIRAT-ONLY STORY
+// const crawlText = [
+//   "THE KOHLI ERA",
+//   "From the streets of Delhi to the grandest stadiums on Earth.",
+//   "A generation didn’t just watch cricket — they watched belief take shape.",
+//   "He walked in with aggression, hunger, and an unshakable fire.",
+//   "Chases became rituals. Pressure became fuel.",
+//   "Fitness became culture. Intent became identity.",
+//   "Records fell. Expectations rose. The standard changed forever.",
+//   "This is not just a career.",
+//   "This is legacy.",
+//   "LONG LIVE THE KING."
+// ];
+
+// export default function Gallery() {
+//   const containerRef = useRef<HTMLDivElement | null>(null);
+
+//   // LOCKED SCROLL
+//   const { scrollYProgress } = useScroll({
+//     target: containerRef,
+//     offset: ['start start', 'end end'],
+//   });
+
+//   // IMAGE MOTION (same feel as original)
+//   const x1 = useTransform(scrollYProgress, [0, 1], [0, -800]);
+//   const x2 = useTransform(scrollYProgress, [0, 1], [-800, 0]);
+
+//   // TEXT CRAWL
+//   const textY = useTransform(scrollYProgress, [0, 1], ['120%', '-250%']);
+
+//   const topRowImages = galleryImages.slice(0, 9);
+//   const bottomRowImages = galleryImages.slice(9, 17).reverse();
+
+//   return (
+//     <>
+//       {/* ================= SECTION A ================= */}
+//       <section ref={containerRef} className="relative h-[350vh] bg-vk-black">
+//         <div className="sticky top-0 h-screen overflow-hidden">
+
+//           {/* TITLE */}
+//           <div className="absolute top-10 left-6 md:left-20 z-30">
+//             <h2 className="font-heading text-4xl md:text-6xl text-white">
+//               THE <span className="text-vk-gold">ARCHIVES</span>
+//             </h2>
+//             <p className="text-gray-400 tracking-wider text-sm mt-2">
+//               A COLLECTION OF MEMORIES
+//             </p>
+//           </div>
+
+//           {/* ===== CINEMATIC TEXT CRAWL ===== */}
+//           <div
+//             className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none
+//                        perspective-[1000px]
+//                        [mask-image:linear-gradient(to_bottom,transparent_0%,black_35%,black_65%,transparent_100%)]"
+//           >
+//             <motion.div
+//               style={{ y: textY, rotateX: '28deg' }}
+//               className="max-w-5xl text-center font-serif uppercase tracking-[0.25em]
+//                          bg-gradient-to-b from-[#BF953F] via-[#FCF6BA] to-[#B38728]
+//                          bg-clip-text text-transparent drop-shadow-2xl"
+//             >
+//               {crawlText.map((line, i) => (
+//                 <p
+//                   key={i}
+//                   className={cn(
+//                     'py-6 md:py-10',
+//                     i === 0 && 'text-5xl md:text-7xl font-bold',
+//                     i !== 0 && i !== crawlText.length - 1 && 'text-2xl md:text-4xl',
+//                     i === crawlText.length - 1 && 'text-5xl md:text-6xl font-bold mt-10'
+//                   )}
+//                 >
+//                   {line}
+//                 </p>
+//               ))}
+//             </motion.div>
+//           </div>
+
+//           {/* ===== BACKGROUND IMAGE GALLERY (ORIGINAL STYLE) ===== */}
+//           <div className="relative z-10 flex flex-col gap-8 pt-40">
+
+//             {/* ROW 1 */}
+//             <motion.div style={{ x: x1 }} className="flex gap-6 w-max pl-6">
+//               {topRowImages.map((num) => (
+//                 <div
+//                   key={num}
+//                   className="relative w-[300px] h-[400px] md:w-[400px] md:h-[500px]
+//                              flex-shrink-0 rounded-lg overflow-hidden
+//                              grayscale hover:grayscale-0 transition-all duration-500 group"
+//                 >
+//                   <Image
+//                     src={`/images/virat${num}.jpg`}
+//                     alt={`Memory ${num}`}
+//                     fill
+//                     className="object-cover group-hover:scale-110 transition-transform duration-700"
+//                   />
+//                   <span className="absolute bottom-2 right-4 text-6xl text-white/10 font-heading font-bold">
+//                     {num}
+//                   </span>
+//                 </div>
+//               ))}
+//             </motion.div>
+
+//             {/* ROW 2 */}
+//             <motion.div style={{ x: x2 }} className="flex gap-6 w-max pr-6">
+//               {bottomRowImages.map((num) => (
+//                 <div
+//                   key={num}
+//                   className="relative w-[300px] h-[400px] md:w-[400px] md:h-[500px]
+//                              flex-shrink-0 rounded-lg overflow-hidden
+//                              grayscale hover:grayscale-0 transition-all duration-500 group"
+//                 >
+//                   <Image
+//                     src={`/images/virat${num}.jpg`}
+//                     alt={`Memory ${num}`}
+//                     fill
+//                     className="object-cover group-hover:scale-110 transition-transform duration-700"
+//                   />
+//                   <span className="absolute bottom-2 right-4 text-6xl text-white/10 font-heading font-bold">
+//                     {num}
+//                   </span>
+//                 </div>
+//               ))}
+//             </motion.div>
+
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* ================= SECTION B ================= */}
+//       <section className="relative h-screen w-full overflow-hidden z-50">
+//         <div className="absolute inset-0">
+//           <Image
+//             src="/images/virat18.jpg"
+//             alt="The Perfect Cover Drive"
+//             fill
+//             className="object-cover"
+//             priority
+//           />
+//           <div className="absolute inset-0 bg-gradient-to-t from-vk-black via-black/50 to-transparent" />
+//         </div>
+
+//         <div className="relative h-full flex flex-col items-center justify-end pb-24 text-center px-4">
+//           <motion.h2
+//             initial={{ opacity: 0, y: 50 }}
+//             whileInView={{ opacity: 1, y: 0 }}
+//             viewport={{ once: true }}
+//             transition={{ duration: 1 }}
+//             className="font-heading text-7xl md:text-[10rem] text-white drop-shadow-2xl"
+//           >
+//             PURE CLASS
+//           </motion.h2>
+
+//           <motion.div
+//             initial={{ opacity: 0 }}
+//             whileInView={{ opacity: 1 }}
+//             transition={{ duration: 1, delay: 0.5 }}
+//             className="mt-4 flex items-center gap-4"
+//           >
+//             <div className="h-[1px] w-12 bg-vk-gold" />
+//             <span className="text-vk-gold tracking-[0.5em] uppercase text-lg">
+//               The Signature Cover Drive
+//             </span>
+//             <div className="h-[1px] w-12 bg-vk-gold" />
+//           </motion.div>
+//         </div>
+//       </section>
+//     </>
+//   );
+// }
+
+
+// 'use client';
+
+// import { motion, useScroll, useTransform } from 'framer-motion';
+// import Image from 'next/image';
+// import { useRef } from 'react';
+// import { cn } from '@/lib/utils';
+
+// // Images 1 → 17
+// const galleryImages = Array.from({ length: 17 }, (_, i) => i + 1);
+
+// // CINEMATIC VIRAT STORY (ONLY TEXT)
+// const crawlText = [
+//   'THE KOHLI ERA',
+//   'From the streets of Delhi to the world’s grandest stadiums.',
+//   'A generation didn’t just watch cricket — they witnessed belief.',
+//   'Aggression in the eyes. Discipline in the body. Fire in the soul.',
+//   'Chases became rituals. Pressure became fuel.',
+//   'Fitness became culture. Intent became identity.',
+//   'Records fell. Expectations rose. The standard changed forever.',
+//   'This is not just a career.',
+//   'This is legacy.',
+//   'LONG LIVE THE KING.'
+// ];
+
+// export default function Gallery() {
+//   const containerRef = useRef<HTMLDivElement | null>(null);
+
+//   /* ================= SCROLL CONTROL ================= */
+//   const { scrollYProgress } = useScroll({
+//     target: containerRef,
+//     offset: ['start start', 'end 85%'], // lock longer
+//   });
+
+//   /* ================= IMAGE MOTION ================= */
+//   const x1 = useTransform(scrollYProgress, [0, 1], [0, -800]);
+//   const x2 = useTransform(scrollYProgress, [0, 1], [-800, 0]);
+
+//   /* ================= TEXT MOTION (SLOW) ================= */
+//   const textY = useTransform(
+//     scrollYProgress,
+//     [0, 0.85, 1],
+//     ['140%', '-120%', '-280%']
+//   );
+
+//   const topRowImages = galleryImages.slice(0, 9);
+//   const bottomRowImages = galleryImages.slice(9, 17).reverse();
+
+//   return (
+//     <>
+//       {/* ================= SECTION A ================= */}
+//       <section ref={containerRef} className="relative h-[350vh] bg-vk-black">
+//         <div className="sticky top-0 h-screen overflow-hidden">
+
+//           {/* ===== TITLE ===== */}
+//           <div className="absolute top-10 left-6 md:left-20 z-30">
+//             <h2 className="font-heading text-4xl md:text-6xl text-white">
+//               THE <span className="text-vk-gold">ARCHIVES</span>
+//             </h2>
+//             <p className="text-gray-400 tracking-wider text-sm mt-2">
+//               A COLLECTION OF MEMORIES
+//             </p>
+//           </div>
+
+//           {/* ===== CINEMATIC TEXT CRAWL ===== */}
+//           <div
+//             className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none
+//                        perspective-[1200px]
+//                        [mask-image:linear-gradient(to_bottom,transparent_0%,black_30%,black_70%,transparent_100%)]"
+//           >
+//             <motion.div
+//               style={{ y: textY, rotateX: '26deg' }}
+//              className="relative max-w-5xl text-center font-serif uppercase tracking-[0.28em]
+//            bg-gradient-to-b from-[#FFFFFF] via-[#FFD700] to-[#B8860B]
+//            bg-clip-text text-transparent
+//            drop-shadow-[0_4px_4px_rgba(0,0,0,1)]
+//            [text-shadow:0_0_20px_rgba(255,215,0,0.5)]"
+//             >
+//               {crawlText.map((line, index) => (
+//                 <motion.p
+//                   key={index}
+//                   initial={{ opacity: 0 }}
+//                   animate={{ opacity: 1 }}
+//                   transition={{ duration: 1.8, delay: index * 0.15 }}
+//                   className={cn(
+//                     'py-8 md:py-12 leading-relaxed',
+//                     index === 0 && 'text-5xl md:text-7xl font-bold',
+//                     index > 0 &&
+//                       index < crawlText.length - 1 &&
+//                       'text-2xl md:text-4xl font-medium',
+//                     index === crawlText.length - 1 &&
+//                       'text-5xl md:text-6xl font-bold mt-16 tracking-[0.4em]'
+//                   )}
+//                 >
+//                   {line}
+//                 </motion.p>
+//               ))}
+//             </motion.div>
+//           </div>
+
+//           {/* ===== IMAGE GALLERY (UNCHANGED STYLE) ===== */}
+//           <div className="relative z-10 flex flex-col gap-8 pt-40">
+
+//             {/* ROW 1 */}
+//             <motion.div style={{ x: x1 }} className="flex gap-6 w-max pl-6">
+//               {topRowImages.map((num) => (
+//                 <div
+//                   key={num}
+//                   className="relative w-[300px] h-[400px] md:w-[400px] md:h-[500px]
+//                              flex-shrink-0 rounded-lg overflow-hidden
+//                              grayscale hover:grayscale-0 transition-all duration-500 group"
+//                 >
+//                   <Image
+//                     src={`/images/virat${num}.jpg`}
+//                     alt={`Memory ${num}`}
+//                     fill
+//                     className="object-cover group-hover:scale-110 transition-transform duration-700"
+//                   />
+//                   <span className="absolute bottom-2 right-4 text-6xl text-white/10 font-heading font-bold">
+//                     {num}
+//                   </span>
+//                 </div>
+//               ))}
+//             </motion.div>
+
+//             {/* ROW 2 */}
+//             <motion.div style={{ x: x2 }} className="flex gap-6 w-max pr-6">
+//               {bottomRowImages.map((num) => (
+//                 <div
+//                   key={num}
+//                   className="relative w-[300px] h-[400px] md:w-[400px] md:h-[500px]
+//                              flex-shrink-0 rounded-lg overflow-hidden
+//                              grayscale hover:grayscale-0 transition-all duration-500 group"
+//                 >
+//                   <Image
+//                     src={`/images/virat${num}.jpg`}
+//                     alt={`Memory ${num}`}
+//                     fill
+//                     className="object-cover group-hover:scale-110 transition-transform duration-700"
+//                   />
+//                   <span className="absolute bottom-2 right-4 text-6xl text-white/10 font-heading font-bold">
+//                     {num}
+//                   </span>
+//                 </div>
+//               ))}
+//             </motion.div>
+
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* ================= SECTION B ================= */}
+//       <section className="relative h-screen w-full overflow-hidden z-50">
+//         <div className="absolute inset-0">
+//           <Image
+//             src="/images/virat18.jpg"
+//             alt="The Perfect Cover Drive"
+//             fill
+//             className="object-cover"
+//             priority
+//           />
+//           <div className="absolute inset-0 bg-gradient-to-t from-vk-black via-black/50 to-transparent" />
+//         </div>
+
+//         <div className="relative h-full flex flex-col items-center justify-end pb-24 text-center px-4">
+//           <motion.h2
+//             initial={{ opacity: 0, y: 50 }}
+//             whileInView={{ opacity: 1, y: 0 }}
+//             transition={{ duration: 1 }}
+//             className="font-heading text-7xl md:text-[10rem] text-white drop-shadow-2xl"
+//           >
+//             PURE CLASS
+//           </motion.h2>
+
+//           <motion.div
+//             initial={{ opacity: 0 }}
+//             whileInView={{ opacity: 1 }}
+//             transition={{ duration: 1, delay: 0.5 }}
+//             className="mt-4 flex items-center gap-4"
+//           >
+//             <div className="h-[1px] w-12 bg-vk-gold" />
+//             <span className="text-vk-gold tracking-[0.5em] uppercase text-lg">
+//               The Signature Cover Drive
+//             </span>
+//             <div className="h-[1px] w-12 bg-vk-gold" />
+//           </motion.div>
+//         </div>
+//       </section>
+//     </>
+//   );
+// }
