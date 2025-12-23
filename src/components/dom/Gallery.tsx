@@ -171,9 +171,8 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import { useRef } from 'react';
-import { cn } from '@/lib/utils'; // Ensure you have this utility, or remove cn() usage
+import { cn } from '@/lib/utils';
 
-// Images 1 to 17 go in the scroll gallery. 
 const galleryImages = Array.from({ length: 17 }, (_, i) => i + 1);
 
 // THE CINEMATIC TEXT CONTENT
@@ -191,78 +190,80 @@ const crawlText = [
 export default function Gallery() {
   const containerRef = useRef(null);
   
-  // 1. SCROLL TRACKING (Locked for 300vh)
+  // 1. SCROLL TRACKING (Locked for 350vh for a longer, slower crawl)
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end']
   });
 
-  // 2. HORIZONTAL MOVEMENT (Images)
-  // Row 1: Moves Left
-  const x1 = useTransform(scrollYProgress, [0, 1], ["10%", "-60%"]);
-  // Row 2: Moves Right
-  const x2 = useTransform(scrollYProgress, [0, 1], ["-60%", "10%"]);
+  // 2. HORIZONTAL MOVEMENT (Images) - Slightly slower speed
+  const x1 = useTransform(scrollYProgress, [0, 1], ["5%", "-45%"]);
+  const x2 = useTransform(scrollYProgress, [0, 1], ["-45%", "5%"]);
 
   // 3. VERTICAL 3D TEXT CRAWL MOVEMENT
-  // Starts below screen (100%), scrolls up into distance (-150%)
-  const textY = useTransform(scrollYProgress, [0, 1], ["110%", "-200%"]);
-  const textOpacity = useTransform(scrollYProgress, [0, 0.1, 0.8, 1], [0, 1, 1, 0]);
-
+  // Starts further down, ends further up for a long dramatic scroll
+  const textY = useTransform(scrollYProgress, [0, 1], ["120%", "-250%"]);
 
   const topRowImages = galleryImages.slice(0, 9);
   const bottomRowImages = galleryImages.slice(9, 17).reverse();
 
-  // Shared Image Container Styles (Fixed the cropping issue here)
+  // Shared Image Styles
   const imageContainerClass = "relative h-[45vh] w-[35vh] md:h-[55vh] md:w-[45vh] flex-shrink-0 rounded-lg overflow-hidden group bg-gray-900/50 border border-white/10";
-  // Using 'object-contain' ensures the WHOLE image is seen, no cropping.
-  const imageClass = "object-contain p-2 group-hover:scale-105 transition-transform duration-700 opacity-60 group-hover:opacity-100 transition-opacity";
+  // Reduced image opacity slightly to make text pop more
+  const imageClass = "object-contain p-2 group-hover:scale-105 transition-transform duration-700 opacity-40 group-hover:opacity-80 transition-opacity";
 
   return (
     <>
       {/* SECTION A: THE LOCKED GALLERY & 3D CRAWL */}
-      <section ref={containerRef} className="relative h-[300vh] bg-vk-black">
+      <section ref={containerRef} className="relative h-[350vh] bg-vk-black">
         
         <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
           
-          {/* Static Title Overlay */}
-          <div className="absolute top-10 left-6 md:left-20 z-30 mix-blend-difference">
-            <h2 className="font-heading text-4xl md:text-6xl text-white">
-              THE <span className="text-vk-gold">ARCHIVES</span>
+          {/* Static Title Overlay - Made subtler so it doesn't fight the crawl text */}
+          <div className="absolute top-10 left-6 md:left-20 z-30 opacity-50 mix-blend-overlay">
+            <h2 className="font-heading text-3xl md:text-5xl text-white">
+              THE ARCHIVES
             </h2>
-            <p className="text-gray-400 font-body tracking-wider text-sm mt-2">
-              SCROLL TO WITNESS THE JOURNEY
-            </p>
           </div>
 
           {/* --- THE 3D MOVIE TEXT CRAWL LAYER --- */}
-          {/* 'perspective' creates the 3D depth field */}
-          <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none perspective-[1000px]">
+          {/* NEW FEATURE: THE FOCUS MASK 
+              [mask-image:...] creates a gradient mask. 
+              - transparent_0%: Top is invisible
+              - black_35% to black_65%: The center "sweet spot" is fully visible
+              - transparent_100%: Bottom becomes invisible again
+          */}
+          <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none perspective-[1000px]
+                          [mask-image:linear-gradient(to_bottom,transparent_0%,black_35%,black_65%,transparent_100%)]">
+              
               {/* The scrolling container with 3D tilt */}
               <motion.div 
                 style={{ 
                   y: textY, 
-                  opacity: textOpacity,
-                  rotateX: "25deg", // Tilts the text back like Star Wars ending
+                  rotateX: "30deg", // Increased tilt slightly
                 }}
-                className="max-w-4xl text-center font-heading text-vk-gold tracking-widest leading-relaxed drop-shadow-2xl"
+                // NEW FEATURE: 3D METALLIC FONT & NEW FONT STYLE
+                // font-serif: Gives it the Roman/Cinematic feel
+                // bg-gradient-to-b...bg-clip-text text-transparent: Creates the 3D Gold effect
+                className="max-w-4xl text-center font-serif uppercase tracking-[0.2em] leading-loose drop-shadow-2xl
+                           bg-gradient-to-b from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-transparent"
               >
                 {crawlText.map((line, index) => (
                   <p key={index} className={cn(
-                    "mb-8",
-                    index === 0 ? "text-4xl md:text-6xl mb-16 text-white" : "text-xl md:text-3xl",
-                    index === crawlText.length - 1 ? "text-4xl md:text-5xl mt-16 text-white" : ""
+                    // Added extra padding between lines for the focus effect to work better
+                    "py-6 md:py-10",
+                    index === 0 ? "text-5xl md:text-7xl font-bold" : "text-2xl md:text-4xl font-semibold",
+                    index === crawlText.length - 1 ? "text-5xl md:text-6xl font-bold mt-10" : ""
                   )}>
                     {line}
                   </p>
                 ))}
               </motion.div>
-               {/* Gradient Mask to make text fade out at top and bottom */}
-              <div className="absolute inset-0 bg-gradient-to-b from-vk-black via-transparent to-vk-black z-25 pointer-events-none" />
           </div>
 
 
           {/* --- BACKGROUND MOVING IMAGES --- */}
-          <div className="flex flex-col gap-8 relative z-10">
+          <div className="flex flex-col gap-8 relative z-10 blur-[2px]">
             
             {/* ROW 1 (Moves Left) */}
             <motion.div style={{ x: x1 }} className="flex gap-6 w-max pl-6">
@@ -272,7 +273,7 @@ export default function Gallery() {
                     src={`/images/virat${num}.jpg`}
                     alt={`Memory ${num}`}
                     fill
-                    className={imageClass} // Using object-contain here
+                    className={imageClass}
                   />
                    <span className="absolute bottom-2 right-4 text-4xl text-white/20 font-heading">
                     {num}
@@ -289,7 +290,7 @@ export default function Gallery() {
                     src={`/images/virat${num}.jpg`}
                     alt={`Memory ${num}`}
                     fill
-                    className={imageClass} // Using object-contain here
+                    className={imageClass}
                   />
                   <span className="absolute bottom-2 right-4 text-4xl text-white/20 font-heading">
                     {num}
@@ -302,14 +303,13 @@ export default function Gallery() {
         </div>
       </section>
 
-      {/* SECTION B: THE GRAND FINALE (Virat 18) */}
-      <section className="relative h-screen w-full overflow-hidden z-30">
+      {/* SECTION B: THE GRAND FINALE (Virat 18) - No changes here */}
+      <section className="relative h-screen w-full overflow-hidden z-50">
         <div className="absolute inset-0 z-0">
           <Image
             src="/images/virat18.jpg"
             alt="The Perfect Cover Drive"
             fill
-            // We keep cover here for the full screen impact
             className="object-cover" 
             priority
           />
