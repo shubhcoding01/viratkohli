@@ -173,7 +173,6 @@ import Image from 'next/image';
 import { useRef } from 'react';
 import { cn } from '@/lib/utils';
 
-// Images 1 to 17 go in the scroll gallery. 
 const galleryImages = Array.from({ length: 17 }, (_, i) => i + 1);
 
 // THE CINEMATIC TEXT CONTENT
@@ -191,75 +190,82 @@ const crawlText = [
 export default function Gallery() {
   const containerRef = useRef(null);
   
-  // 1. SCROLL TRACKING
+  // 1. SCROLL TRACKING (Locked for 350vh for a longer, slower crawl)
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end']
   });
 
-  // 2. HORIZONTAL MOVEMENT (Images)
-  // Row 1: Moves Left
-  const x1 = useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]);
-  // Row 2: Moves Right
-  const x2 = useTransform(scrollYProgress, [0, 1], ["-50%", "0%"]);
+  // 2. HORIZONTAL MOVEMENT (Images) - Slightly slower speed
+  const x1 = useTransform(scrollYProgress, [0, 1], ["5%", "-45%"]);
+  const x2 = useTransform(scrollYProgress, [0, 1], ["-45%", "5%"]);
 
-  // 3. VERTICAL 3D TEXT MOVEMENT
-  // Text starts below (120%) and scrolls far up (-250%)
+  // 3. VERTICAL 3D TEXT CRAWL MOVEMENT
+  // Starts further down, ends further up for a long dramatic scroll
   const textY = useTransform(scrollYProgress, [0, 1], ["120%", "-250%"]);
 
   const topRowImages = galleryImages.slice(0, 9);
   const bottomRowImages = galleryImages.slice(9, 17).reverse();
 
-  // IMAGE STYLING:
-  // object-contain: Shows the full image without cutting.
-  // bg-white/5: Adds a subtle glass box frame around the image so it looks neat.
-  const imageContainerClass = "relative w-[300px] h-[400px] md:w-[400px] md:h-[500px] flex-shrink-0 rounded-lg overflow-hidden group border border-white/10 bg-white/5";
-  const imageClass = "object-contain p-4 grayscale group-hover:grayscale-0 transition-all duration-700 scale-95 group-hover:scale-105 opacity-40 group-hover:opacity-100 transition-opacity";
+  // Shared Image Styles
+  const imageContainerClass = "relative h-[45vh] w-[35vh] md:h-[55vh] md:w-[45vh] flex-shrink-0 rounded-lg overflow-hidden group bg-gray-900/50 border border-white/10";
+  // Reduced image opacity slightly to make text pop more
+  const imageClass = "object-contain p-2 group-hover:scale-105 transition-transform duration-700 opacity-40 group-hover:opacity-80 transition-opacity";
 
   return (
     <>
-      {/* SECTION A: THE LOCKED GALLERY & TEXT OVERLAY */}
-      <section ref={containerRef} className="relative h-[300vh] bg-vk-black">
+      {/* SECTION A: THE LOCKED GALLERY & 3D CRAWL */}
+      <section ref={containerRef} className="relative h-[350vh] bg-vk-black">
         
         <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
           
-          {/* Static Title (Faded Background) */}
-          <div className="absolute top-10 left-6 md:left-20 z-10 opacity-30 mix-blend-overlay pointer-events-none">
-            <h2 className="font-heading text-4xl md:text-6xl text-white">
+          {/* Static Title Overlay - Made subtler so it doesn't fight the crawl text */}
+          <div className="absolute top-10 left-6 md:left-20 z-30 opacity-50 mix-blend-overlay">
+            <h2 className="font-heading text-3xl md:text-5xl text-white">
               THE ARCHIVES
             </h2>
           </div>
 
-          {/* --- LAYER 1: THE 3D TEXT CRAWL (ON TOP) --- */}
-          {/* We use a mask so text fades in at the center and fades out at top/bottom */}
-          <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none perspective-[1000px] 
-                          [mask-image:linear-gradient(to_bottom,transparent_0%,black_30%,black_70%,transparent_100%)]">
-            
-            <motion.div 
-              style={{ 
-                y: textY, 
-                rotateX: "25deg", // The Star Wars Tilt
-              }}
-              // 3D Gold Gradient Text
-              className="max-w-4xl text-center font-serif uppercase tracking-[0.2em] leading-loose drop-shadow-[0_4px_4px_rgba(0,0,0,1)]
-                         bg-gradient-to-b from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-transparent"
-            >
-              {crawlText.map((line, index) => (
-                <p key={index} className={cn(
-                  "py-8 md:py-12 px-4 shadow-black drop-shadow-2xl",
-                  index === 0 ? "text-5xl md:text-7xl font-bold" : "text-2xl md:text-3xl font-semibold",
-                  index === crawlText.length - 1 ? "text-5xl md:text-6xl font-bold mt-10" : ""
-                )}>
-                  {line}
-                </p>
-              ))}
-            </motion.div>
+          {/* --- THE 3D MOVIE TEXT CRAWL LAYER --- */}
+          {/* NEW FEATURE: THE FOCUS MASK 
+              [mask-image:...] creates a gradient mask. 
+              - transparent_0%: Top is invisible
+              - black_35% to black_65%: The center "sweet spot" is fully visible
+              - transparent_100%: Bottom becomes invisible again
+          */}
+          <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none perspective-[1000px]
+                          [mask-image:linear-gradient(to_bottom,transparent_0%,black_35%,black_65%,transparent_100%)]">
+              
+              {/* The scrolling container with 3D tilt */}
+              <motion.div 
+                style={{ 
+                  y: textY, 
+                  rotateX: "30deg", // Increased tilt slightly
+                }}
+                // NEW FEATURE: 3D METALLIC FONT & NEW FONT STYLE
+                // font-serif: Gives it the Roman/Cinematic feel
+                // bg-gradient-to-b...bg-clip-text text-transparent: Creates the 3D Gold effect
+                className="max-w-4xl text-center font-serif uppercase tracking-[0.2em] leading-loose drop-shadow-2xl
+                           bg-gradient-to-b from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-transparent"
+              >
+                {crawlText.map((line, index) => (
+                  <p key={index} className={cn(
+                    // Added extra padding between lines for the focus effect to work better
+                    "py-6 md:py-10",
+                    index === 0 ? "text-5xl md:text-7xl font-bold" : "text-2xl md:text-4xl font-semibold",
+                    index === crawlText.length - 1 ? "text-5xl md:text-6xl font-bold mt-10" : ""
+                  )}>
+                    {line}
+                  </p>
+                ))}
+              </motion.div>
           </div>
 
-          {/* --- LAYER 2: THE MOVING IMAGES (BEHIND TEXT) --- */}
-          <div className="flex flex-col gap-8 relative z-20">
+
+          {/* --- BACKGROUND MOVING IMAGES --- */}
+          <div className="flex flex-col gap-8 relative z-10 blur-[2px]">
             
-            {/* ROW 1: Images 1 -> 9 (Moves Left) */}
+            {/* ROW 1 (Moves Left) */}
             <motion.div style={{ x: x1 }} className="flex gap-6 w-max pl-6">
               {topRowImages.map((num) => (
                 <div key={num} className={imageContainerClass}>
@@ -267,17 +273,16 @@ export default function Gallery() {
                     src={`/images/virat${num}.jpg`}
                     alt={`Memory ${num}`}
                     fill
-                    className={imageClass} // Shows Full Image
+                    className={imageClass}
                   />
-                  {/* Number Watermark */}
-                  <span className="absolute bottom-4 right-4 text-5xl text-white/10 font-heading font-bold">
+                   <span className="absolute bottom-2 right-4 text-4xl text-white/20 font-heading">
                     {num}
                   </span>
                 </div>
               ))}
             </motion.div>
 
-            {/* ROW 2: Images 17 -> 10 (Moves Right) */}
+            {/* ROW 2 (Moves Right) */}
             <motion.div style={{ x: x2 }} className="flex gap-6 w-max pr-6">
               {bottomRowImages.map((num) => (
                 <div key={num} className={imageContainerClass}>
@@ -285,9 +290,9 @@ export default function Gallery() {
                     src={`/images/virat${num}.jpg`}
                     alt={`Memory ${num}`}
                     fill
-                    className={imageClass} // Shows Full Image
+                    className={imageClass}
                   />
-                  <span className="absolute bottom-4 right-4 text-5xl text-white/10 font-heading font-bold">
+                  <span className="absolute bottom-2 right-4 text-4xl text-white/20 font-heading">
                     {num}
                   </span>
                 </div>
@@ -298,14 +303,14 @@ export default function Gallery() {
         </div>
       </section>
 
-      {/* SECTION B: THE GRAND FINALE (Virat 18) */}
+      {/* SECTION B: THE GRAND FINALE (Virat 18) - No changes here */}
       <section className="relative h-screen w-full overflow-hidden z-50">
         <div className="absolute inset-0 z-0">
           <Image
             src="/images/virat18.jpg"
             alt="The Perfect Cover Drive"
             fill
-            className="object-cover"
+            className="object-cover" 
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-vk-black via-black/50 to-transparent" />
