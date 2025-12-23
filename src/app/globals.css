@@ -109,3 +109,12 @@ body {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
+
+@theme {
+  --animate-text-shimmer: text-shimmer 3s ease-in-out infinite;
+
+  @keyframes text-shimmer {
+    0% { background-position: 200% center; }
+    100% { background-position: -200% center; }
+  }
+}

@@ -166,185 +166,185 @@
 //   );
 // }
 
-'use client';
+// 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
-import Image from 'next/image';
-import { useRef } from 'react';
-import { cn } from '@/lib/utils';
+// import { motion, useScroll, useTransform } from 'framer-motion';
+// import Image from 'next/image';
+// import { useRef } from 'react';
+// import { cn } from '@/lib/utils';
 
-const galleryImages = Array.from({ length: 17 }, (_, i) => i + 1);
+// const galleryImages = Array.from({ length: 17 }, (_, i) => i + 1);
 
-// THE CINEMATIC TEXT CONTENT
-const crawlText = [
-  "THE KOHLI ERA",
-  "A boy from Delhi who dared to dream. He didn't just play the game; he redefined aggression, consistency, and passion.",
-  "From the Under-19 glory to stepping into the shoes of giants, he carried the hopes of a billion with a fire in his eyes that burned brighter than the stadium lights.",
-  "The Chase Master. The Run Machine. The King. 80 international centuries are not just statistics; they are chapters of dominance written across stadiums worldwide.",
-  "He made the impossible chases look routine. He turned pressure into his playground. His cover drive became poetry in motion, a sight that stopped time.",
-  "Beyond the runs, it was the attitude. The belief that victory belongs to those who want it most. He transformed a team's mindset, forging a legacy of fitness and fearlessness.",
-  "As the archives scroll, witness the evolution of a legend. A career defined not just by triumphs, but by the indomitable spirit to rise after every fall.",
-  "LONG LIVE THE KING."
-];
+// // THE CINEMATIC TEXT CONTENT
+// const crawlText = [
+//   "THE KOHLI ERA",
+//   "A boy from Delhi who dared to dream. He didn't just play the game; he redefined aggression, consistency, and passion.",
+//   "From the Under-19 glory to stepping into the shoes of giants, he carried the hopes of a billion with a fire in his eyes that burned brighter than the stadium lights.",
+//   "The Chase Master. The Run Machine. The King. 80 international centuries are not just statistics; they are chapters of dominance written across stadiums worldwide.",
+//   "He made the impossible chases look routine. He turned pressure into his playground. His cover drive became poetry in motion, a sight that stopped time.",
+//   "Beyond the runs, it was the attitude. The belief that victory belongs to those who want it most. He transformed a team's mindset, forging a legacy of fitness and fearlessness.",
+//   "As the archives scroll, witness the evolution of a legend. A career defined not just by triumphs, but by the indomitable spirit to rise after every fall.",
+//   "LONG LIVE THE KING."
+// ];
 
-export default function Gallery() {
-  const containerRef = useRef(null);
+// export default function Gallery() {
+//   const containerRef = useRef(null);
   
-  // 1. SCROLL TRACKING (Locked for 350vh for a longer, slower crawl)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end']
-  });
+//   // 1. SCROLL TRACKING (Locked for 350vh for a longer, slower crawl)
+//   const { scrollYProgress } = useScroll({
+//     target: containerRef,
+//     offset: ['start start', 'end end']
+//   });
 
-  // 2. HORIZONTAL MOVEMENT (Images) - Slightly slower speed
-  const x1 = useTransform(scrollYProgress, [0, 1], ["5%", "-45%"]);
-  const x2 = useTransform(scrollYProgress, [0, 1], ["-45%", "5%"]);
+//   // 2. HORIZONTAL MOVEMENT (Images) - Slightly slower speed
+//   const x1 = useTransform(scrollYProgress, [0, 1], ["5%", "-45%"]);
+//   const x2 = useTransform(scrollYProgress, [0, 1], ["-45%", "5%"]);
 
-  // 3. VERTICAL 3D TEXT CRAWL MOVEMENT
-  // Starts further down, ends further up for a long dramatic scroll
-  const textY = useTransform(scrollYProgress, [0, 1], ["120%", "-250%"]);
+//   // 3. VERTICAL 3D TEXT CRAWL MOVEMENT
+//   // Starts further down, ends further up for a long dramatic scroll
+//   const textY = useTransform(scrollYProgress, [0, 1], ["120%", "-250%"]);
 
-  const topRowImages = galleryImages.slice(0, 9);
-  const bottomRowImages = galleryImages.slice(9, 17).reverse();
+//   const topRowImages = galleryImages.slice(0, 9);
+//   const bottomRowImages = galleryImages.slice(9, 17).reverse();
 
-  // Shared Image Styles
-  const imageContainerClass = "relative h-[45vh] w-[35vh] md:h-[55vh] md:w-[45vh] flex-shrink-0 rounded-lg overflow-hidden group bg-gray-900/50 border border-white/10";
-  // Reduced image opacity slightly to make text pop more
-  const imageClass = "object-contain p-2 group-hover:scale-105 transition-transform duration-700 opacity-40 group-hover:opacity-80 transition-opacity";
+//   // Shared Image Styles
+//   const imageContainerClass = "relative h-[45vh] w-[35vh] md:h-[55vh] md:w-[45vh] flex-shrink-0 rounded-lg overflow-hidden group bg-gray-900/50 border border-white/10";
+//   // Reduced image opacity slightly to make text pop more
+//   const imageClass = "object-contain p-2 group-hover:scale-105 transition-transform duration-700 opacity-40 group-hover:opacity-80 transition-opacity";
 
-  return (
-    <>
-      {/* SECTION A: THE LOCKED GALLERY & 3D CRAWL */}
-      <section ref={containerRef} className="relative h-[350vh] bg-vk-black">
+//   return (
+//     <>
+//       {/* SECTION A: THE LOCKED GALLERY & 3D CRAWL */}
+//       <section ref={containerRef} className="relative h-[350vh] bg-vk-black">
         
-        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
+//         <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
           
-          {/* Static Title Overlay - Made subtler so it doesn't fight the crawl text */}
-          <div className="absolute top-10 left-6 md:left-20 z-30 opacity-50 mix-blend-overlay">
-            <h2 className="font-heading text-3xl md:text-5xl text-white">
-              THE ARCHIVES
-            </h2>
-          </div>
+//           {/* Static Title Overlay - Made subtler so it doesn't fight the crawl text */}
+//           <div className="absolute top-10 left-6 md:left-20 z-30 opacity-50 mix-blend-overlay">
+//             <h2 className="font-heading text-3xl md:text-5xl text-white">
+//               THE ARCHIVES
+//             </h2>
+//           </div>
 
-          {/* --- THE 3D MOVIE TEXT CRAWL LAYER --- */}
-          {/* NEW FEATURE: THE FOCUS MASK 
-              [mask-image:...] creates a gradient mask. 
-              - transparent_0%: Top is invisible
-              - black_35% to black_65%: The center "sweet spot" is fully visible
-              - transparent_100%: Bottom becomes invisible again
-          */}
-          <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none perspective-[1000px]
-                          [mask-image:linear-gradient(to_bottom,transparent_0%,black_35%,black_65%,transparent_100%)]">
+//           {/* --- THE 3D MOVIE TEXT CRAWL LAYER --- */}
+//           {/* NEW FEATURE: THE FOCUS MASK 
+//               [mask-image:...] creates a gradient mask. 
+//               - transparent_0%: Top is invisible
+//               - black_35% to black_65%: The center "sweet spot" is fully visible
+//               - transparent_100%: Bottom becomes invisible again
+//           */}
+//           <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none perspective-[1000px]
+//                           [mask-image:linear-gradient(to_bottom,transparent_0%,black_35%,black_65%,transparent_100%)]">
               
-              {/* The scrolling container with 3D tilt */}
-              <motion.div 
-                style={{ 
-                  y: textY, 
-                  rotateX: "30deg", // Increased tilt slightly
-                }}
-                // NEW FEATURE: 3D METALLIC FONT & NEW FONT STYLE
-                // font-serif: Gives it the Roman/Cinematic feel
-                // bg-gradient-to-b...bg-clip-text text-transparent: Creates the 3D Gold effect
-                className="max-w-4xl text-center font-serif uppercase tracking-[0.2em] leading-loose drop-shadow-2xl
-                           bg-gradient-to-b from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-transparent"
-              >
-                {crawlText.map((line, index) => (
-                  <p key={index} className={cn(
-                    // Added extra padding between lines for the focus effect to work better
-                    "py-6 md:py-10",
-                    index === 0 ? "text-5xl md:text-7xl font-bold" : "text-2xl md:text-4xl font-semibold",
-                    index === crawlText.length - 1 ? "text-5xl md:text-6xl font-bold mt-10" : ""
-                  )}>
-                    {line}
-                  </p>
-                ))}
-              </motion.div>
-          </div>
+//               {/* The scrolling container with 3D tilt */}
+//               <motion.div 
+//                 style={{ 
+//                   y: textY, 
+//                   rotateX: "30deg", // Increased tilt slightly
+//                 }}
+//                 // NEW FEATURE: 3D METALLIC FONT & NEW FONT STYLE
+//                 // font-serif: Gives it the Roman/Cinematic feel
+//                 // bg-gradient-to-b...bg-clip-text text-transparent: Creates the 3D Gold effect
+//                 className="max-w-4xl text-center font-serif uppercase tracking-[0.2em] leading-loose drop-shadow-2xl
+//                            bg-gradient-to-b from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-transparent"
+//               >
+//                 {crawlText.map((line, index) => (
+//                   <p key={index} className={cn(
+//                     // Added extra padding between lines for the focus effect to work better
+//                     "py-6 md:py-10",
+//                     index === 0 ? "text-5xl md:text-7xl font-bold" : "text-2xl md:text-4xl font-semibold",
+//                     index === crawlText.length - 1 ? "text-5xl md:text-6xl font-bold mt-10" : ""
+//                   )}>
+//                     {line}
+//                   </p>
+//                 ))}
+//               </motion.div>
+//           </div>
 
 
-          {/* --- BACKGROUND MOVING IMAGES --- */}
-          <div className="flex flex-col gap-8 relative z-10 blur-[2px]">
+//           {/* --- BACKGROUND MOVING IMAGES --- */}
+//           <div className="flex flex-col gap-8 relative z-10 blur-[2px]">
             
-            {/* ROW 1 (Moves Left) */}
-            <motion.div style={{ x: x1 }} className="flex gap-6 w-max pl-6">
-              {topRowImages.map((num) => (
-                <div key={num} className={imageContainerClass}>
-                  <Image
-                    src={`/images/virat${num}.jpg`}
-                    alt={`Memory ${num}`}
-                    fill
-                    className={imageClass}
-                  />
-                   <span className="absolute bottom-2 right-4 text-4xl text-white/20 font-heading">
-                    {num}
-                  </span>
-                </div>
-              ))}
-            </motion.div>
+//             {/* ROW 1 (Moves Left) */}
+//             <motion.div style={{ x: x1 }} className="flex gap-6 w-max pl-6">
+//               {topRowImages.map((num) => (
+//                 <div key={num} className={imageContainerClass}>
+//                   <Image
+//                     src={`/images/virat${num}.jpg`}
+//                     alt={`Memory ${num}`}
+//                     fill
+//                     className={imageClass}
+//                   />
+//                    <span className="absolute bottom-2 right-4 text-4xl text-white/20 font-heading">
+//                     {num}
+//                   </span>
+//                 </div>
+//               ))}
+//             </motion.div>
 
-            {/* ROW 2 (Moves Right) */}
-            <motion.div style={{ x: x2 }} className="flex gap-6 w-max pr-6">
-              {bottomRowImages.map((num) => (
-                <div key={num} className={imageContainerClass}>
-                  <Image
-                    src={`/images/virat${num}.jpg`}
-                    alt={`Memory ${num}`}
-                    fill
-                    className={imageClass}
-                  />
-                  <span className="absolute bottom-2 right-4 text-4xl text-white/20 font-heading">
-                    {num}
-                  </span>
-                </div>
-              ))}
-            </motion.div>
+//             {/* ROW 2 (Moves Right) */}
+//             <motion.div style={{ x: x2 }} className="flex gap-6 w-max pr-6">
+//               {bottomRowImages.map((num) => (
+//                 <div key={num} className={imageContainerClass}>
+//                   <Image
+//                     src={`/images/virat${num}.jpg`}
+//                     alt={`Memory ${num}`}
+//                     fill
+//                     className={imageClass}
+//                   />
+//                   <span className="absolute bottom-2 right-4 text-4xl text-white/20 font-heading">
+//                     {num}
+//                   </span>
+//                 </div>
+//               ))}
+//             </motion.div>
 
-          </div>
-        </div>
-      </section>
+//           </div>
+//         </div>
+//       </section>
 
-      {/* SECTION B: THE GRAND FINALE (Virat 18) - No changes here */}
-      <section className="relative h-screen w-full overflow-hidden z-50">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/virat18.jpg"
-            alt="The Perfect Cover Drive"
-            fill
-            className="object-cover" 
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-vk-black via-black/50 to-transparent" />
-        </div>
+//       {/* SECTION B: THE GRAND FINALE (Virat 18) - No changes here */}
+//       <section className="relative h-screen w-full overflow-hidden z-50">
+//         <div className="absolute inset-0 z-0">
+//           <Image
+//             src="/images/virat18.jpg"
+//             alt="The Perfect Cover Drive"
+//             fill
+//             className="object-cover" 
+//             priority
+//           />
+//           <div className="absolute inset-0 bg-gradient-to-t from-vk-black via-black/50 to-transparent" />
+//         </div>
 
-        <div className="relative z-10 h-full flex flex-col items-center justify-end pb-24 text-center px-4">
-          <motion.h2 
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            className="font-heading text-7xl md:text-[10rem] leading-none text-white drop-shadow-2xl"
-          >
-            PURE CLASS
-          </motion.h2>
+//         <div className="relative z-10 h-full flex flex-col items-center justify-end pb-24 text-center px-4">
+//           <motion.h2 
+//             initial={{ opacity: 0, y: 50 }}
+//             whileInView={{ opacity: 1, y: 0 }}
+//             viewport={{ once: true }}
+//             transition={{ duration: 1 }}
+//             className="font-heading text-7xl md:text-[10rem] leading-none text-white drop-shadow-2xl"
+//           >
+//             PURE CLASS
+//           </motion.h2>
           
-          <motion.div 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="mt-4 flex items-center gap-4"
-          >
-            <div className="h-[1px] w-12 bg-vk-gold" />
-            <span className="font-body text-vk-gold tracking-[0.5em] text-lg uppercase">
-              The Signature Cover Drive
-            </span>
-            <div className="h-[1px] w-12 bg-vk-gold" />
-          </motion.div>
-        </div>
-      </section>
-    </>
-  );
-}
+//           <motion.div 
+//             initial={{ opacity: 0 }}
+//             whileInView={{ opacity: 1 }}
+//             viewport={{ once: true }}
+//             transition={{ duration: 1, delay: 0.5 }}
+//             className="mt-4 flex items-center gap-4"
+//           >
+//             <div className="h-[1px] w-12 bg-vk-gold" />
+//             <span className="font-body text-vk-gold tracking-[0.5em] text-lg uppercase">
+//               The Signature Cover Drive
+//             </span>
+//             <div className="h-[1px] w-12 bg-vk-gold" />
+//           </motion.div>
+//         </div>
+//       </section>
+//     </>
+//   );
+// }
 
 
 // 'use client';
@@ -718,3 +718,241 @@ export default function Gallery() {
 //     </>
 //   );
 // }
+
+
+'use client';
+
+import { motion, useScroll, useTransform, useSpring, useMotionTemplate, useMotionValue } from 'framer-motion';
+import Image from 'next/image';
+import { useRef, useEffect } from 'react';
+import { cn } from '@/lib/utils';
+
+const galleryImages = Array.from({ length: 17 }, (_, i) => i + 1);
+
+const crawlText = [
+  "THE KOHLI ERA",
+  "A boy from Delhi who dared to dream. He didn't just play the game; he redefined aggression, consistency, and passion.",
+  "From the Under-19 glory to stepping into the shoes of giants, he carried the hopes of a billion with a fire in his eyes that burned brighter than the stadium lights.",
+  "The Chase Master. The Run Machine. The King. 80 international centuries are not just statistics; they are chapters of dominance written across stadiums worldwide.",
+  "He made the impossible chases look routine. He turned pressure into his playground. His cover drive became poetry in motion, a sight that stopped time.",
+  "Beyond the runs, it was the attitude. The belief that victory belongs to those who want it most. He transformed a team's mindset, forging a legacy of fitness and fearlessness.",
+  "As the archives scroll, witness the evolution of a legend. A career defined not just by triumphs, but by the indomitable spirit to rise after every fall.",
+  "LONG LIVE THE KING."
+];
+
+export default function Gallery() {
+  const containerRef = useRef(null);
+  
+  // --- MOUSE TRACKING FOR SPOTLIGHT ---
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  // --- SCROLL LOGIC ---
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end']
+  });
+
+  // Smooth out the scroll progress for butter-smooth movement
+  const smoothProgress = useSpring(scrollYProgress, { damping: 15, mass: 0.27, stiffness: 55 });
+
+  // Horizontal Movement (Left/Right)
+  const x1 = useTransform(smoothProgress, [0, 1], ["0%", "-45%"]);
+  const x2 = useTransform(smoothProgress, [0, 1], ["-45%", "0%"]);
+
+  // Vertical Text Movement (Deep 3D Scroll)
+  const textY = useTransform(smoothProgress, [0, 1], ["110%", "-260%"]);
+
+  const topRowImages = galleryImages.slice(0, 9);
+  const bottomRowImages = galleryImages.slice(9, 17).reverse();
+
+  return (
+    <>
+      {/* SECTION A: THE LOCKED GALLERY */}
+      <section 
+        ref={containerRef} 
+        onMouseMove={handleMouseMove}
+        className="relative h-[350vh] bg-[#050505] overflow-hidden"
+      >
+        
+        {/* 1. CINEMATIC BACKGROUND LAYERS */}
+        
+        {/* A. Film Grain Overlay (Adds texture) */}
+        <div className="fixed inset-0 z-0 opacity-20 pointer-events-none mix-blend-overlay" 
+             style={{ backgroundImage: 'url("/textures/noise.png")' }} /> 
+             {/* If you don't have noise.png, this just stays transparent, perfectly safe */}
+
+        {/* B. The Mouse Spotlight (Follows cursor) */}
+        <motion.div
+          className="pointer-events-none absolute -inset-px opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
+          style={{
+            background: useMotionTemplate`
+              radial-gradient(
+                600px circle at ${mouseX}px ${mouseY}px,
+                rgba(184, 134, 11, 0.08),
+                transparent 80%
+              )
+            `,
+          }}
+        />
+
+        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden group">
+          
+          {/* Static Title (Watermark Style) */}
+          <div className="absolute top-10 left-6 md:left-20 z-10 opacity-20 mix-blend-screen pointer-events-none">
+            <h2 className="font-heading text-4xl md:text-6xl text-white tracking-widest blur-[1px]">
+              ARCHIVES // 18
+            </h2>
+          </div>
+
+          {/* --- LAYER 2: THE 3D TEXT CRAWL (ON TOP) --- */}
+          {/* Enhanced Mask for smoother fade in/out */}
+          <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none perspective-[1200px] 
+                          [mask-image:linear-gradient(to_bottom,transparent_5%,black_30%,black_70%,transparent_95%)]">
+            
+            <motion.div 
+              style={{ 
+                y: textY, 
+                rotateX: "20deg", // Reduced slightly for better readability
+              }}
+              className="max-w-5xl text-center font-serif uppercase tracking-[0.25em] leading-loose"
+            >
+              {crawlText.map((line, index) => (
+                <div key={index} className="relative">
+                  <p className={cn(
+                    "py-8 md:py-12 px-4 relative z-10",
+                    // THE ADVANCED GOLD GRADIENT WITH ANIMATION
+                    // 'bg-[length:200%_auto]' allows us to animate the gradient position
+                    // 'animate-shine' moves the light across the text (Add keyframes in global css if needed, or use this inline trick)
+                    "bg-gradient-to-r from-[#8a6e2f] via-[#fff0c4] to-[#8a6e2f] bg-[length:200%_auto] bg-clip-text text-transparent animate-text-shimmer",
+                    "drop-shadow-[0_4px_8px_rgba(0,0,0,1)]",
+                    index === 0 ? "text-6xl md:text-8xl font-bold" : "text-2xl md:text-4xl font-medium",
+                    index === crawlText.length - 1 ? "text-5xl md:text-7xl font-bold mt-10 text-[#FFD700]" : ""
+                  )}>
+                    {line}
+                  </p>
+                  {/* Subtle Glow behind the text for readability */}
+                  <p className={cn(
+                    "absolute inset-0 py-8 md:py-12 px-4 select-none blur-xl z-0 opacity-40 text-black",
+                    index === 0 ? "text-6xl md:text-8xl font-bold" : "text-2xl md:text-4xl font-medium",
+                    index === crawlText.length - 1 ? "text-5xl md:text-7xl font-bold mt-10" : ""
+                  )} aria-hidden="true">
+                    {line}
+                  </p>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* --- LAYER 3: THE MOVING IMAGES --- */}
+          <div className="flex flex-col gap-10 relative z-20">
+            
+            {/* ROW 1 (Moves Left) */}
+            <motion.div style={{ x: x1 }} className="flex gap-8 w-max pl-10">
+              {topRowImages.map((num) => (
+                <GalleryCard key={num} num={num} />
+              ))}
+            </motion.div>
+
+            {/* ROW 2 (Moves Right) */}
+            <motion.div style={{ x: x2 }} className="flex gap-8 w-max pr-10">
+              {bottomRowImages.map((num) => (
+                <GalleryCard key={num} num={num} />
+              ))}
+            </motion.div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION B: THE GRAND FINALE (Virat 18) */}
+      <section className="relative h-screen w-full overflow-hidden z-50 bg-black">
+        
+        <div className="absolute inset-0 z-0 scale-105 animate-subtle-zoom">
+          <Image
+            src="/images/virat18.jpg"
+            alt="The Perfect Cover Drive"
+            fill
+            className="object-cover opacity-80"
+            priority
+          />
+          {/* Vignette Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80" />
+        </div>
+
+        <div className="relative z-10 h-full flex flex-col items-center justify-end pb-24 text-center px-4">
+          <motion.h2 
+            initial={{ opacity: 0, scale: 0.9, y: 50 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            className="font-heading text-8xl md:text-[12rem] leading-none text-white drop-shadow-[0_10px_30px_rgba(255,215,0,0.3)]"
+          >
+            PURE CLASS
+          </motion.h2>
+          
+          <motion.div 
+            initial={{ opacity: 0, width: 0 }}
+            whileInView={{ opacity: 1, width: "auto" }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="mt-6 flex items-center gap-6 overflow-hidden"
+          >
+            <div className="h-[2px] w-20 bg-gradient-to-r from-transparent to-vk-gold" />
+            <span className="font-serif text-vk-gold tracking-[0.6em] text-xl uppercase whitespace-nowrap">
+              The Signature Cover Drive
+            </span>
+            <div className="h-[2px] w-20 bg-gradient-to-l from-transparent to-vk-gold" />
+          </motion.div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+// --- SUB-COMPONENT: ADVANCED CARD ---
+// Extracted to keep the main code clean and handle hover effects separately
+function GalleryCard({ num }: { num: number }) {
+  return (
+    <div className="relative w-[320px] h-[420px] md:w-[450px] md:h-[580px] flex-shrink-0 group perspective-1000">
+      
+      {/* The Glow Effect behind the card */}
+      <div className="absolute inset-0 bg-vk-gold/20 blur-3xl opacity-0 group-hover:opacity-40 transition-opacity duration-700 rounded-full" />
+      
+      {/* The Card Container */}
+      <div className="relative w-full h-full rounded-xl overflow-hidden border border-white/5 bg-[#0a0a0a] 
+                      transition-all duration-700 ease-out
+                      group-hover:border-vk-gold/50 group-hover:shadow-[0_0_50px_rgba(0,0,0,0.8)] group-hover:-translate-y-4">
+        
+        <Image
+          src={`/images/virat${num}.jpg`}
+          alt={`Memory ${num}`}
+          fill
+          className="object-cover grayscale brightness-75 contrast-125
+                     transition-all duration-1000 ease-out
+                     group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-110" 
+        />
+        
+        {/* Cinematic Gradient overlay on image (Bottom up) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-60" />
+
+        {/* Number Badge */}
+        <div className="absolute bottom-6 right-6 flex flex-col items-end opacity-50 group-hover:opacity-100 transition-opacity duration-500">
+           <span className="text-xs text-vk-gold tracking-widest mb-1 uppercase">Memory</span>
+           <span className="text-6xl text-white font-heading font-bold leading-none">{num}</span>
+        </div>
+
+        {/* Shine Effect on Hover (Glass reflection) */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0 z-10 
+                        translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out pointer-events-none" />
+      </div>
+    </div>
+  );
+}
