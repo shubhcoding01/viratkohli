@@ -190,27 +190,27 @@ const crawlText = [
 export default function Gallery() {
   const containerRef = useRef(null);
   
-  // 1. SCROLL TRACKING (Locked for 350vh for a longer, slower crawl)
+  // 1. SCROLL TRACKING
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end']
   });
 
-  // 2. HORIZONTAL MOVEMENT (Images) - Slightly slower speed
+  // 2. HORIZONTAL MOVEMENT
   const x1 = useTransform(scrollYProgress, [0, 1], ["5%", "-45%"]);
   const x2 = useTransform(scrollYProgress, [0, 1], ["-45%", "5%"]);
 
-  // 3. VERTICAL 3D TEXT CRAWL MOVEMENT
-  // Starts further down, ends further up for a long dramatic scroll
+  // 3. VERTICAL 3D TEXT CRAWL
   const textY = useTransform(scrollYProgress, [0, 1], ["120%", "-250%"]);
 
   const topRowImages = galleryImages.slice(0, 9);
   const bottomRowImages = galleryImages.slice(9, 17).reverse();
 
   // Shared Image Styles
-  const imageContainerClass = "relative h-[45vh] w-[35vh] md:h-[55vh] md:w-[45vh] flex-shrink-0 rounded-lg overflow-hidden group bg-gray-900/50 border border-white/10";
-  // Reduced image opacity slightly to make text pop more
-  const imageClass = "object-contain p-2 group-hover:scale-105 transition-transform duration-700 opacity-40 group-hover:opacity-80 transition-opacity";
+  const imageContainerClass = "relative h-[45vh] w-[35vh] md:h-[55vh] md:w-[45vh] flex-shrink-0 rounded-lg overflow-hidden group bg-gray-900 border border-white/10";
+  
+  // UPDATED: No opacity fade, just pure Grayscale -> Color transition
+  const imageClass = "object-contain p-2 grayscale group-hover:grayscale-0 transition-all duration-700 scale-95 group-hover:scale-105";
 
   return (
     <>
@@ -219,39 +219,29 @@ export default function Gallery() {
         
         <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
           
-          {/* Static Title Overlay - Made subtler so it doesn't fight the crawl text */}
-          <div className="absolute top-10 left-6 md:left-20 z-30 opacity-50 mix-blend-overlay">
+          {/* Static Title Overlay */}
+          <div className="absolute top-10 left-6 md:left-20 z-30 opacity-30 mix-blend-overlay pointer-events-none">
             <h2 className="font-heading text-3xl md:text-5xl text-white">
               THE ARCHIVES
             </h2>
           </div>
 
           {/* --- THE 3D MOVIE TEXT CRAWL LAYER --- */}
-          {/* NEW FEATURE: THE FOCUS MASK 
-              [mask-image:...] creates a gradient mask. 
-              - transparent_0%: Top is invisible
-              - black_35% to black_65%: The center "sweet spot" is fully visible
-              - transparent_100%: Bottom becomes invisible again
-          */}
+          {/* Using the Center Focus Mask */}
           <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none perspective-[1000px]
                           [mask-image:linear-gradient(to_bottom,transparent_0%,black_35%,black_65%,transparent_100%)]">
               
-              {/* The scrolling container with 3D tilt */}
               <motion.div 
                 style={{ 
                   y: textY, 
-                  rotateX: "30deg", // Increased tilt slightly
+                  rotateX: "30deg", 
                 }}
-                // NEW FEATURE: 3D METALLIC FONT & NEW FONT STYLE
-                // font-serif: Gives it the Roman/Cinematic feel
-                // bg-gradient-to-b...bg-clip-text text-transparent: Creates the 3D Gold effect
-                className="max-w-4xl text-center font-serif uppercase tracking-[0.2em] leading-loose drop-shadow-2xl
+                className="max-w-4xl text-center font-serif uppercase tracking-[0.2em] leading-loose drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]
                            bg-gradient-to-b from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-transparent"
               >
                 {crawlText.map((line, index) => (
                   <p key={index} className={cn(
-                    // Added extra padding between lines for the focus effect to work better
-                    "py-6 md:py-10",
+                    "py-6 md:py-10 shadow-black drop-shadow-lg", // Added shadow to make text readable over images
                     index === 0 ? "text-5xl md:text-7xl font-bold" : "text-2xl md:text-4xl font-semibold",
                     index === crawlText.length - 1 ? "text-5xl md:text-6xl font-bold mt-10" : ""
                   )}>
@@ -261,9 +251,9 @@ export default function Gallery() {
               </motion.div>
           </div>
 
-
           {/* --- BACKGROUND MOVING IMAGES --- */}
-          <div className="flex flex-col gap-8 relative z-10 blur-[2px]">
+          {/* REMOVED: blur-[2px] class so images are sharp */}
+          <div className="flex flex-col gap-8 relative z-10">
             
             {/* ROW 1 (Moves Left) */}
             <motion.div style={{ x: x1 }} className="flex gap-6 w-max pl-6">
@@ -275,9 +265,6 @@ export default function Gallery() {
                     fill
                     className={imageClass}
                   />
-                   <span className="absolute bottom-2 right-4 text-4xl text-white/20 font-heading">
-                    {num}
-                  </span>
                 </div>
               ))}
             </motion.div>
@@ -292,9 +279,6 @@ export default function Gallery() {
                     fill
                     className={imageClass}
                   />
-                  <span className="absolute bottom-2 right-4 text-4xl text-white/20 font-heading">
-                    {num}
-                  </span>
                 </div>
               ))}
             </motion.div>
@@ -303,7 +287,7 @@ export default function Gallery() {
         </div>
       </section>
 
-      {/* SECTION B: THE GRAND FINALE (Virat 18) - No changes here */}
+      {/* SECTION B: THE GRAND FINALE (Virat 18) */}
       <section className="relative h-screen w-full overflow-hidden z-50">
         <div className="absolute inset-0 z-0">
           <Image
