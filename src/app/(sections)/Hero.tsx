@@ -288,14 +288,14 @@ export default function Hero() {
     <section className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-vk-black">
       
       {/* 1. CINEMATIC BACKGROUND */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-vk-black to-black z-0" />
+      <div className="absolute inset-0 bg-linear-to-b from-gray-900 via-vk-black to-black z-0" />
       
       {/* Giant "18" Watermark */}
       <motion.span 
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
-        className="absolute text-[45vw] font-heading text-white/[0.03] font-bold select-none z-0 leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-sm"
+        className="absolute text-[45vw] font-heading text-white/3 font-bold select-none z-0 leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-sm"
       >
         18
       </motion.span>
@@ -310,17 +310,17 @@ export default function Hero() {
           transition={{ duration: 1 }}
           className="flex items-center justify-center gap-4 mb-4"
         >
-          <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-vk-gold" />
+          <div className="h-px w-12 bg-linear-to-r from-transparent to-vk-gold" />
           <span className="text-vk-gold font-bold uppercase tracking-[0.3em] text-xs md:text-sm drop-shadow-md">
             The G.O.A.T
           </span>
-          <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-vk-gold" />
+          <div className="h-px w-12 bg-linear-to-l from-transparent to-vk-gold" />
         </motion.div>
         
         {/* Main Title */}
         <h1 className="font-heading text-6xl md:text-[8rem] leading-[0.9] text-white mb-6 drop-shadow-2xl">
           VIRAT <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#FFFFFF] via-[#FFD700] to-[#B8860B]">
+          <span className="text-transparent bg-clip-text bg-linear-to-b from-[#FFFFFF] via-[#FFD700] to-[#B8860B]">
             KOHLI
           </span>
         </h1>
@@ -383,8 +383,8 @@ function CountdownItem({ value, label }: { value: number, label: string }) {
   const formattedValue = value < 10 ? `0${value}` : value;
 
   return (
-    <div className="flex flex-col items-center min-w-[60px] md:min-w-[80px]">
-      <span className="font-mono text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 drop-shadow-lg">
+    <div className="flex flex-col items-center min-w-15 md:min-w-20">
+      <span className="font-mono text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-linear-to-b from-white to-gray-400 drop-shadow-lg">
         {formattedValue}
       </span>
       <span className="text-[10px] md:text-xs uppercase tracking-widest text-vk-gold mt-2 font-medium opacity-80">
