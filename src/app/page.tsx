@@ -213,7 +213,7 @@ export default function Home() {
         <Gallery />
 
         {/* Info Sections */}
-        <Stats />
+        <Stats label={''} value={''} subtext={''} index={0} />
         <Career />
         
         {/* 5. ADVANCED FOOTER */}
