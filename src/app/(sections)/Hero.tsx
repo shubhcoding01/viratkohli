@@ -208,40 +208,196 @@
 //   );
 // }
 
+// 'use client';
+
+// import { motion } from 'framer-motion';
+
+// export default function Hero() {
+//   return (
+//     <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+      
+//       {/* Background Gradient */}
+//       <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-vk-black z-0" />
+      
+//       {/* Giant Background Number "18" */}
+//       <span className="absolute text-[40vw] font-heading text-white/5 font-bold select-none z-0">
+//         18
+//       </span>
+
+//       <div className="relative z-10 text-center">
+//         <motion.span 
+//           initial={{ opacity: 0, letterSpacing: '0.2em' }}
+//           animate={{ opacity: 1, letterSpacing: '0.5em' }}
+//           transition={{ duration: 1 }}
+//           className="text-vk-gold font-bold uppercase tracking-widest text-sm md:text-xl"
+//         >
+//           The G.O.A.T
+//         </motion.span>
+        
+//         <h1 className="font-heading text-7xl md:text-9xl text-white mt-4 mb-6">
+//           VIRAT <span className="text-transparent bg-clip-text bg-gradient-to-r from-vk-gold to-yellow-600">KOHLI</span>
+//         </h1>
+
+//         <p className="max-w-xl mx-auto text-gray-400 text-lg md:text-xl leading-relaxed">
+//           A visual journey through the career of the greatest batsman of the modern era.
+//         </p>
+//       </div>
+//     </section>
+//   );
+// }
+
 'use client';
 
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
+
+// --- CONFIGURATION ---
+// 📅 SET THE NEXT MATCH DATE HERE (Year, MonthIndex 0-11, Day, Hour, Minute)
+// Example: March 22, 2025 at 7:30 PM
+const NEXT_MATCH_DATE = new Date(2025, 2, 22, 19, 30).getTime(); 
+const OPPONENT = "CSK"; // Change this to the opponent team name
 
 export default function Hero() {
-  return (
-    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
-      
-      {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-vk-black z-0" />
-      
-      {/* Giant Background Number "18" */}
-      <span className="absolute text-[40vw] font-heading text-white/5 font-bold select-none z-0">
-        18
-      </span>
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [isClient, setIsClient] = useState(false);
 
-      <div className="relative z-10 text-center">
-        <motion.span 
-          initial={{ opacity: 0, letterSpacing: '0.2em' }}
-          animate={{ opacity: 1, letterSpacing: '0.5em' }}
-          transition={{ duration: 1 }}
-          className="text-vk-gold font-bold uppercase tracking-widest text-sm md:text-xl"
-        >
-          The G.O.A.T
-        </motion.span>
+  // --- COUNTDOWN LOGIC ---
+  useEffect(() => {
+    setIsClient(true);
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = NEXT_MATCH_DATE - now;
+
+      if (distance < 0) {
+        clearInterval(timer); // Stop if match started
+      } else {
+        setTimeLeft({
+          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((distance % (1000 * 60)) / 1000),
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <section className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-vk-black">
+      
+      {/* 1. CINEMATIC BACKGROUND */}
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-vk-black to-black z-0" />
+      
+      {/* Giant "18" Watermark */}
+      <motion.span 
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.5, ease: "easeOut" }}
+        className="absolute text-[45vw] font-heading text-white/[0.03] font-bold select-none z-0 leading-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-sm"
+      >
+        18
+      </motion.span>
+
+      {/* 2. MAIN CONTENT */}
+      <div className="relative z-10 text-center px-4">
         
-        <h1 className="font-heading text-7xl md:text-9xl text-white mt-4 mb-6">
-          VIRAT <span className="text-transparent bg-clip-text bg-gradient-to-r from-vk-gold to-yellow-600">KOHLI</span>
+        {/* Top Label */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="flex items-center justify-center gap-4 mb-4"
+        >
+          <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-vk-gold" />
+          <span className="text-vk-gold font-bold uppercase tracking-[0.3em] text-xs md:text-sm drop-shadow-md">
+            The G.O.A.T
+          </span>
+          <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-vk-gold" />
+        </motion.div>
+        
+        {/* Main Title */}
+        <h1 className="font-heading text-6xl md:text-[8rem] leading-[0.9] text-white mb-6 drop-shadow-2xl">
+          VIRAT <br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#FFFFFF] via-[#FFD700] to-[#B8860B]">
+            KOHLI
+          </span>
         </h1>
 
-        <p className="max-w-xl mx-auto text-gray-400 text-lg md:text-xl leading-relaxed">
+        <p className="max-w-xl mx-auto text-gray-400 text-sm md:text-lg leading-relaxed mb-12 border-l-2 border-vk-gold/30 pl-4 text-left md:text-center md:border-l-0 md:pl-0">
           A visual journey through the career of the greatest batsman of the modern era.
+          From Delhi to the World.
         </p>
+
+        {/* 3. THE ADVANCED COUNTDOWN MATCH CENTER */}
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+          className="relative inline-flex flex-col items-center"
+        >
+          {/* Match Context Badge */}
+          <div className="absolute -top-6 bg-vk-gold text-black font-bold text-xs px-3 py-1 rounded-full tracking-widest uppercase shadow-[0_0_15px_rgba(255,215,0,0.6)]">
+            Next Battle vs {OPPONENT}
+          </div>
+
+          {/* Glassmorphism Container */}
+          <div className="flex gap-4 md:gap-8 p-6 md:p-8 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl">
+            
+            {/* Days */}
+            <CountdownItem value={timeLeft.days} label="Days" />
+            <Separator />
+            {/* Hours */}
+            <CountdownItem value={timeLeft.hours} label="Hours" />
+            <Separator />
+            {/* Minutes */}
+            <CountdownItem value={timeLeft.minutes} label="Mins" />
+            <Separator />
+            {/* Seconds */}
+            <CountdownItem value={timeLeft.seconds} label="Secs" />
+
+          </div>
+        </motion.div>
+
       </div>
+      
+      {/* Scroll Indicator */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, y: [0, 10, 0] }}
+        transition={{ delay: 2, duration: 2, repeat: Infinity }}
+        className="absolute bottom-10 text-white/30 text-xs tracking-[0.2em] uppercase"
+      >
+        Scroll to Explore
+      </motion.div>
+
     </section>
+  );
+}
+
+// --- HELPER COMPONENTS ---
+
+function CountdownItem({ value, label }: { value: number, label: string }) {
+  // Format number to always show 2 digits (e.g., 05 instead of 5)
+  const formattedValue = value < 10 ? `0${value}` : value;
+
+  return (
+    <div className="flex flex-col items-center min-w-[60px] md:min-w-[80px]">
+      <span className="font-mono text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 drop-shadow-lg">
+        {formattedValue}
+      </span>
+      <span className="text-[10px] md:text-xs uppercase tracking-widest text-vk-gold mt-2 font-medium opacity-80">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+function Separator() {
+  return (
+    <div className="flex flex-col justify-start pt-2 md:pt-4">
+      <span className="text-2xl md:text-4xl text-white/20 animate-pulse">:</span>
+    </div>
   );
 }
