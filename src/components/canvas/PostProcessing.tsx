@@ -109,7 +109,7 @@ import {
   ChromaticAberration, 
   BrightnessContrast 
 } from '@react-three/postprocessing';
-import { GlitchMode, BlendFunction } from 'postprocessing';
+import { GlitchMode, BlendFunction } from 'postprocessing'; // 👈 MUST be from 'postprocessing'
 import { useStore } from '@/store/useStore';
 import * as THREE from 'three';
 
@@ -117,23 +117,17 @@ export default function PostProcessing() {
   const { mode } = useStore();
 
   return (
-    // multisampling={4} ensures edges remain sharp even with effects applied
     <EffectComposer disableNormalPass multisampling={4}>
       
-      {/* 1. COLOR GRADING (The "Netflix" Look) 
-           boosts contrast to make blacks deeper and gold shinier.
-      */}
+      {/* 1. Brightness/Contrast */}
       <BrightnessContrast
         brightness={0}
-        contrast={0.1} // +10% Contrast for punchy visuals
+        contrast={0.1}
       />
 
-      {/* 2. CHROMATIC ABERRATION (Lens Imperfection)
-           Adds a subtle RGB split at the edges of the screen.
-           Aggressive Mode = Stronger split (Disoriented/Chaos).
-      */}
+      {/* 2. Chromatic Aberration */}
       <ChromaticAberration
-        blendFunction={BlendFunction.NORMAL} // Use NORMAL to overlay correctly
+        blendFunction={BlendFunction.NORMAL} 
         offset={new THREE.Vector2(
           mode === 'aggressive' ? 0.004 : 0.002, 
           mode === 'aggressive' ? 0.004 : 0.002
@@ -142,44 +136,39 @@ export default function PostProcessing() {
         modulationOffset={0}
       />
 
-      {/* 3. BLOOM (The "God Aura") 
-           luminanceThreshold: Only very bright things (Gold/Neon) will glow.
-      */}
+      {/* 3. Bloom */}
       <Bloom 
-        luminanceThreshold={1.1} // Higher threshold so only PURE lights glow
+        luminanceThreshold={1.1} 
         mipmapBlur 
         intensity={mode === 'aggressive' ? 2.0 : 1.2} 
         radius={0.6}
-        levels={9} // Smoother blur gradient
+        levels={9}
       />
 
-      {/* 4. VIGNETTE (Focus Center) 
-           Darkens the corners to force the eye to look at Virat/Trophy.
-      */}
+      {/* 4. Vignette - FIXED */}
       <Vignette 
         offset={0.3} 
         darkness={0.6} 
-        eskil={false} 
+        eskil={false} // 👈 This prop is often required to prevent Type errors
         blendFunction={BlendFunction.NORMAL} 
       />
 
-      {/* 5. GLITCH (The "Aggression") 
-           Only renders when strictly necessary.
-      */}
-      {mode === 'aggressive' && (
-        <Glitch 
-          delay={[0.5, 1.5]} 
-          duration={[0.1, 0.3]} 
-          strength={[0.2, 0.4]} 
-          mode={GlitchMode.SPORADIC} 
-          ratio={0.85} 
-        />
-      )}
+      {/* 5. Glitch - FIXED */}
+      <Glitch 
+        delay={[0.5, 1.5]} 
+        duration={[0.1, 0.3]} 
+        strength={[0.2, 0.4]} 
+        mode={GlitchMode.SPORADIC} 
+        ratio={0.85} 
+        active={mode === 'aggressive'} 
+      />
 
-      {/* 6. NOISE (Texture) 
-           Prevents "Color Banding" in the dark gradients.
-      */}
-      <Noise opacity={0.05} />
+      {/* 6. Noise - FIXED */}
+      <Noise 
+        premultiply // 👈 Helps prevent shader errors
+        opacity={0.05}
+        blendFunction={BlendFunction.SOFT_LIGHT} // SOFT_LIGHT blends better than NORMAL for noise
+      />
       
     </EffectComposer>
   );
