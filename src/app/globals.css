@@ -27,17 +27,14 @@ body {
 
  @import "tailwindcss";
 
-
-
+/* 1. Global Variables & Base Setup */
 :root {
-  /* These CSS variables are injected by layout.tsx, 
-     but we set defaults here just in case */
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 5, 5, 5;
   --background-end-rgb: 0, 0, 0;
+  --vk-gold: #D4AF37;
 }
 
-/* 1. Base Setup */
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -47,30 +44,35 @@ body {
     )
     rgb(var(--background-start-rgb));
   
-  /* Critical for performance */
+  /* Font Smoothing for crisp cinematic text */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   
-  /* Hide overflow because we control scrolling via Lenis */
-  overflow-x: hidden;
-  margin: 0;
-  padding: 0;
+  /* Prevent horizontal scroll issues */
+  overflow-x: hidden; 
 }
 
-/* 2. Hide Default Scrollbar (Chrome/Safari/Opera) */
+/* 2. Scrollbar Hiding (Global & Utility) */
+/* We apply this globally to body for that "App-like" feel */
 body::-webkit-scrollbar {
   display: none;
 }
-
-/* Hide Default Scrollbar (IE, Edge, Firefox) */
 body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
 
-/* 3. Utility: Glassmorphism Card Effect */
-/* Use this class for stats cards to get that 'Frosted Glass' look */
+/* Utility class if you need to hide it on specific divs later */
 @layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+  }
+  .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+  }
+
+  /* 3. Royal Effects Utilities */
   .glass-panel {
     @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-xl;
   }
@@ -78,43 +80,55 @@ body {
   .text-glow {
     text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); /* Gold Glow */
   }
-}
 
-/* 4. Canvas Container */
-/* Ensures the 3D scene stays fixed behind everything */
-#canvas-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1; /* Behind UI */
-  pointer-events: all; /* Allows clicking 3D objects */
-}
-
-/* 5. Selection Color */
-/* If user highlights text, it should be Gold */
-::selection {
-  background: #D4AF37;
-  color: #000;
-}
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-.scrollbar-hide::-webkit-scrollbar {
-    display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-}
-
-@theme {
-  --animate-text-shimmer: text-shimmer 3s ease-in-out infinite;
-
-  @keyframes text-shimmer {
-    0% { background-position: 200% center; }
-    100% { background-position: -200% center; }
+  /* 4. Text Shimmer Animation Class */
+  /* This creates the liquid gold light moving across text */
+  .animate-text-shimmer {
+    animation: text-shimmer 3s ease-in-out infinite;
+    background-size: 200% auto;
   }
+  
+  /* 5. Slow Spin Animation */
+  .animate-slow-spin {
+    animation: spin 20s linear infinite;
+  }
+  
+  /* 6. Subtle Zoom Animation for Hero Images */
+  .animate-subtle-zoom {
+    animation: subtle-zoom 20s ease-in-out infinite alternate;
+  }
+}
+
+/* 5. Keyframes Definitions */
+@keyframes text-shimmer {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes subtle-zoom {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+/* 6. Selection Color (Gold Highlight) */
+::selection {
+  background: var(--vk-gold);
+  color: #000;
 }
