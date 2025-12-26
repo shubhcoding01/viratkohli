@@ -151,3 +151,13 @@ body {
     perspective: 1000px;
   }
 }
+
+/* Add this to src/app/globals.css */
+@keyframes scanline {
+  0% { transform: translateY(0%); }
+  100% { transform: translateY(100%); }
+}
+
+.animate-scanline {
+  animation: scanline 4s linear infinite;
+}

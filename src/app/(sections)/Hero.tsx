@@ -404,47 +404,275 @@
 // }
 
 
+// 'use client';
+
+// import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+// import { useEffect, useState, useRef } from 'react';
+// import { cn } from '@/lib/utils';
+// import { useStore } from '@/store/useStore'; // Connect to 3D World
+// import useMouse from '@/hooks/useMouse'; // Import your advanced mouse hook
+
+// // --- CONFIGURATION ---
+// const NEXT_MATCH_DATE = new Date(2025, 2, 22, 19, 30).getTime(); 
+// const OPPONENT = "CSK"; 
+
+// export default function Hero() {
+//   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+//   const [isClient, setIsClient] = useState(false);
+  
+//   // 1. SCENE CONTROL (Force 'Idle' Mode on Mount)
+//   const { setMode } = useStore();
+  
+//   useEffect(() => {
+//     setMode('idle'); // Ensure Virat is looking at us when we are at the top
+//   }, [setMode]);
+
+//   // 2. PARALLAX EFFECT FOR THE "18" WATERMARK
+//   const { normalizedX, normalizedY } = useMouse();
+//   // Move "18" opposite to mouse direction
+//   const parallaxX = useTransform(normalizedX, [-1, 1], [30, -30]);
+//   const parallaxY = useTransform(normalizedY, [-1, 1], [30, -30]);
+//   // Add smooth physics
+//   const springX = useSpring(parallaxX, { stiffness: 50, damping: 20 });
+//   const springY = useSpring(parallaxY, { stiffness: 50, damping: 20 });
+
+//   // 3. COUNTDOWN LOGIC
+//   useEffect(() => {
+//     setIsClient(true);
+//     const timer = setInterval(() => {
+//       const now = new Date().getTime();
+//       const distance = NEXT_MATCH_DATE - now;
+
+//       if (distance < 0) {
+//         clearInterval(timer);
+//       } else {
+//         setTimeLeft({
+//           days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+//           hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+//           minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+//           seconds: Math.floor((distance % (1000 * 60)) / 1000),
+//         });
+//       }
+//     }, 1000);
+//     return () => clearInterval(timer);
+//   }, []);
+
+//   const handleScrollDown = () => {
+//     const nextSection = document.getElementById('section-stats');
+//     if (nextSection) nextSection.scrollIntoView({ behavior: 'smooth' });
+//   };
+
+//   return (
+//     <section id="hero" className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-[#050505]">
+      
+//       {/* 4. BACKGROUND LAYERS */}
+//       <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] via-[#050505] to-black z-0" />
+      
+//       {/* Texture Noise */}
+//       <div className="absolute inset-0 opacity-[0.03] bg-[url('/images/noise.png')] pointer-events-none z-0 mix-blend-overlay" />
+
+//       {/* 5. PARALLAX "18" WATERMARK */}
+//       <motion.div 
+//         style={{ x: springX, y: springY }}
+//         initial={{ opacity: 0, scale: 0.8 }}
+//         animate={{ opacity: 1, scale: 1 }}
+//         transition={{ duration: 1.5, ease: "easeOut" }}
+//         className="absolute z-0 select-none pointer-events-none"
+//       >
+//         <span className="text-[40vw] font-heading font-bold leading-none text-white/[0.02] blur-sm">
+//            18
+//         </span>
+//       </motion.div>
+
+//       {/* 6. MAIN CONTENT (Staggered Entrance) */}
+//       <div className="relative z-10 text-center px-4">
+        
+//         {/* A. Top Label */}
+//         <motion.div 
+//           initial={{ opacity: 0, y: -20 }}
+//           animate={{ opacity: 1, y: 0 }}
+//           transition={{ duration: 0.8, delay: 0.2 }}
+//           className="flex items-center justify-center gap-4 mb-6"
+//         >
+//           <div className="h-[1px] w-8 md:w-16 bg-gradient-to-r from-transparent to-vk-gold" />
+//           <span className="text-vk-gold font-bold uppercase tracking-[0.4em] text-[10px] md:text-sm drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]">
+//             The G.O.A.T
+//           </span>
+//           <div className="h-[1px] w-8 md:w-16 bg-gradient-to-l from-transparent to-vk-gold" />
+//         </motion.div>
+        
+//         {/* B. Main Title */}
+//         <motion.h1 
+//           initial={{ opacity: 0, scale: 0.9 }}
+//           animate={{ opacity: 1, scale: 1 }}
+//           transition={{ duration: 0.8, delay: 0.4 }}
+//           className="font-heading text-6xl md:text-[9rem] leading-[0.9] text-white mb-8 drop-shadow-2xl"
+//         >
+//           VIRAT <br />
+//           <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#FFFFFF] via-[#FFD700] to-[#B8860B]">
+//             KOHLI
+//           </span>
+//         </motion.h1>
+
+//         {/* C. Subtext */}
+//         <motion.p 
+//            initial={{ opacity: 0 }}
+//            animate={{ opacity: 1 }}
+//            transition={{ duration: 0.8, delay: 0.6 }}
+//            className="max-w-xl mx-auto text-gray-400 text-sm md:text-lg leading-relaxed mb-16 tracking-wide"
+//         >
+//           A visual journey through the career of the greatest batsman of the modern era.
+//           <span className="text-vk-gold"> From Delhi to the World.</span>
+//         </motion.p>
+
+//         {/* D. THE ADVANCED COUNTDOWN MATCH CENTER */}
+//         <motion.div 
+//           initial={{ opacity: 0, y: 40 }}
+//           animate={{ opacity: 1, y: 0 }}
+//           transition={{ delay: 0.8, duration: 0.8 }}
+//           className="relative inline-flex flex-col items-center group"
+//         >
+//           {/* Match Context Badge (Floating) */}
+//           <div className="absolute -top-5 z-20 bg-vk-gold text-black font-bold text-[10px] md:text-xs px-4 py-1 rounded-full tracking-widest uppercase shadow-[0_0_20px_rgba(212,175,55,0.6)] group-hover:scale-105 transition-transform duration-300">
+//             Next Battle vs {OPPONENT}
+//           </div>
+
+//           {/* Glassmorphism Container */}
+//           <div className="flex gap-4 md:gap-8 p-6 md:p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl group-hover:border-vk-gold/30 transition-colors duration-500">
+            
+//             {/* Days */}
+//             <CountdownItem value={timeLeft.days} label="Days" />
+//             <Separator />
+//             {/* Hours */}
+//             <CountdownItem value={timeLeft.hours} label="Hours" />
+//             <Separator />
+//             {/* Minutes */}
+//             <CountdownItem value={timeLeft.minutes} label="Mins" />
+//             <Separator />
+//             {/* Seconds */}
+//             <CountdownItem value={timeLeft.seconds} label="Secs" />
+
+//           </div>
+//         </motion.div>
+
+//       </div>
+      
+//       {/* 7. SCROLL INDICATOR BUTTON */}
+//       <motion.button 
+//         onClick={handleScrollDown}
+//         initial={{ opacity: 0 }}
+//         animate={{ opacity: 1, y: [0, 10, 0] }}
+//         transition={{ delay: 2, duration: 2, repeat: Infinity, ease: "easeInOut" }}
+//         className="absolute bottom-10 z-20 flex flex-col items-center gap-2 group cursor-pointer"
+//       >
+//         <span className="text-white/40 text-[10px] tracking-[0.3em] uppercase group-hover:text-vk-gold transition-colors">
+//           Scroll to Explore
+//         </span>
+//         <div className="w-[1px] h-12 bg-gradient-to-b from-vk-gold to-transparent" />
+//       </motion.button>
+
+//     </section>
+//   );
+// }
+
+// // --- HELPER COMPONENTS ---
+
+// function CountdownItem({ value, label }: { value: number, label: string }) {
+//   // Format number to always show 2 digits (e.g., 05 instead of 5)
+//   const formattedValue = value < 10 ? `0${value}` : value;
+
+//   return (
+//     <div className="flex flex-col items-center min-w-[50px] md:min-w-[80px]">
+//       <span className="font-mono text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 drop-shadow-lg tabular-nums">
+//         {formattedValue}
+//       </span>
+//       <span className="text-[9px] md:text-[11px] uppercase tracking-[0.2em] text-vk-gold mt-2 font-medium opacity-80">
+//         {label}
+//       </span>
+//     </div>
+//   );
+// }
+
+// function Separator() {
+//   return (
+//     <div className="flex flex-col justify-start pt-2 md:pt-4">
+//       <span className="text-2xl md:text-4xl text-white/20 animate-pulse">:</span>
+//     </div>
+//   );
+// }
+
 'use client';
 
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
-import { useEffect, useState, useRef } from 'react';
-import { cn } from '@/lib/utils';
-import { useStore } from '@/store/useStore'; // Connect to 3D World
-import useMouse from '@/hooks/useMouse'; // Import your advanced mouse hook
+import { useEffect, useState, useMemo } from 'react';
+import { useStore } from '@/store/useStore';
+import useMouse from '@/hooks/useMouse';
 
-// --- CONFIGURATION ---
-const NEXT_MATCH_DATE = new Date(2025, 2, 22, 19, 30).getTime(); 
-const OPPONENT = "CSK"; 
+// --- SMART SCHEDULE CONFIGURATION ---
+// The system will pick the first date that is in the future.
+// Times are set to 1:30 PM (13:30) as requested.
+const SCHEDULE = [
+  { 
+    id: 1, 
+    date: '2026-01-11T13:30:00', // YYYY-MM-DD format ensures correct sorting
+    label: "1st ODI", 
+    opponent: "New Zealand" 
+  },
+  { 
+    id: 2, 
+    date: '2026-01-14T13:30:00', 
+    label: "2nd ODI", 
+    opponent: "New Zealand" 
+  },
+  { 
+    id: 3, 
+    date: '2026-01-18T13:30:00', 
+    label: "3rd ODI", 
+    opponent: "New Zealand" 
+  }
+];
 
 export default function Hero() {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const [isClient, setIsClient] = useState(false);
+  const [activeMatch, setActiveMatch] = useState(SCHEDULE[0]);
   
-  // 1. SCENE CONTROL (Force 'Idle' Mode on Mount)
+  // 1. SCENE CONTROL (Force Idle Mode)
   const { setMode } = useStore();
-  
-  useEffect(() => {
-    setMode('idle'); // Ensure Virat is looking at us when we are at the top
-  }, [setMode]);
+  useEffect(() => { setMode('idle'); }, [setMode]);
 
-  // 2. PARALLAX EFFECT FOR THE "18" WATERMARK
+  // 2. PARALLAX EFFECTS
   const { normalizedX, normalizedY } = useMouse();
-  // Move "18" opposite to mouse direction
-  const parallaxX = useTransform(normalizedX, [-1, 1], [30, -30]);
-  const parallaxY = useTransform(normalizedY, [-1, 1], [30, -30]);
-  // Add smooth physics
-  const springX = useSpring(parallaxX, { stiffness: 50, damping: 20 });
-  const springY = useSpring(parallaxY, { stiffness: 50, damping: 20 });
+  const springConfig = { stiffness: 50, damping: 20 };
+  const springX = useSpring(useTransform(normalizedX, [-1, 1], [30, -30]), springConfig);
+  const springY = useSpring(useTransform(normalizedY, [-1, 1], [30, -30]), springConfig);
 
-  // 3. COUNTDOWN LOGIC
+  // 3. SMART MATCH DETECTION
   useEffect(() => {
-    setIsClient(true);
+    const now = new Date().getTime();
+    // Find the first match where the time is greater than now
+    const upcoming = SCHEDULE.find(match => new Date(match.date).getTime() > now);
+    
+    if (upcoming) {
+      setActiveMatch(upcoming);
+    } else {
+      // If all matches passed, show the last one or a "Season Over" state
+      setActiveMatch(SCHEDULE[SCHEDULE.length - 1]);
+    }
+  }, []);
+
+  // 4. COUNTDOWN TIMER
+  useEffect(() => {
+    if (!activeMatch) return;
+    
+    const targetDate = new Date(activeMatch.date).getTime();
+
     const timer = setInterval(() => {
       const now = new Date().getTime();
-      const distance = NEXT_MATCH_DATE - now;
+      const distance = targetDate - now;
 
       if (distance < 0) {
         clearInterval(timer);
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       } else {
         setTimeLeft({
           days: Math.floor(distance / (1000 * 60 * 60 * 24)),
@@ -454,8 +682,9 @@ export default function Hero() {
         });
       }
     }, 1000);
+
     return () => clearInterval(timer);
-  }, []);
+  }, [activeMatch]);
 
   const handleScrollDown = () => {
     const nextSection = document.getElementById('section-stats');
@@ -465,13 +694,11 @@ export default function Hero() {
   return (
     <section id="hero" className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-[#050505]">
       
-      {/* 4. BACKGROUND LAYERS */}
+      {/* BACKGROUND */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] via-[#050505] to-black z-0" />
-      
-      {/* Texture Noise */}
-      <div className="absolute inset-0 opacity-[0.03] bg-[url('/images/noise.png')] pointer-events-none z-0 mix-blend-overlay" />
+      <div className="absolute inset-0 opacity-[0.05] bg-[url('/images/noise.png')] pointer-events-none z-0 mix-blend-overlay" />
 
-      {/* 5. PARALLAX "18" WATERMARK */}
+      {/* PARALLAX WATERMARK */}
       <motion.div 
         style={{ x: springX, y: springY }}
         initial={{ opacity: 0, scale: 0.8 }}
@@ -479,29 +706,29 @@ export default function Hero() {
         transition={{ duration: 1.5, ease: "easeOut" }}
         className="absolute z-0 select-none pointer-events-none"
       >
-        <span className="text-[40vw] font-heading font-bold leading-none text-white/[0.02] blur-sm">
+        <span className="text-[40vw] font-heading font-bold leading-none text-white/[0.03] blur-sm">
            18
         </span>
       </motion.div>
 
-      {/* 6. MAIN CONTENT (Staggered Entrance) */}
+      {/* MAIN CONTENT */}
       <div className="relative z-10 text-center px-4">
         
-        {/* A. Top Label */}
+        {/* TOP LABEL */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           className="flex items-center justify-center gap-4 mb-6"
         >
-          <div className="h-[1px] w-8 md:w-16 bg-gradient-to-r from-transparent to-vk-gold" />
-          <span className="text-vk-gold font-bold uppercase tracking-[0.4em] text-[10px] md:text-sm drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]">
+          <div className="h-[1px] w-8 md:w-16 bg-vk-gold" />
+          <span className="text-vk-gold font-bold uppercase tracking-[0.4em] text-[10px] md:text-sm drop-shadow-md">
             The G.O.A.T
           </span>
-          <div className="h-[1px] w-8 md:w-16 bg-gradient-to-l from-transparent to-vk-gold" />
+          <div className="h-[1px] w-8 md:w-16 bg-vk-gold" />
         </motion.div>
         
-        {/* B. Main Title */}
+        {/* NAME TITLE */}
         <motion.h1 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -509,55 +736,47 @@ export default function Hero() {
           className="font-heading text-6xl md:text-[9rem] leading-[0.9] text-white mb-8 drop-shadow-2xl"
         >
           VIRAT <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#FFFFFF] via-[#FFD700] to-[#B8860B]">
-            KOHLI
-          </span>
+          <span className="text-vk-gold">KOHLI</span>
         </motion.h1>
 
-        {/* C. Subtext */}
+        {/* SUBTEXT */}
         <motion.p 
            initial={{ opacity: 0 }}
            animate={{ opacity: 1 }}
            transition={{ duration: 0.8, delay: 0.6 }}
-           className="max-w-xl mx-auto text-gray-400 text-sm md:text-lg leading-relaxed mb-16 tracking-wide"
+           className="max-w-xl mx-auto text-gray-300 text-sm md:text-lg leading-relaxed mb-16 tracking-wide"
         >
-          A visual journey through the career of the greatest batsman of the modern era.
-          <span className="text-vk-gold"> From Delhi to the World.</span>
+          The King returns to face New Zealand. 
+          <span className="text-vk-gold"> {activeMatch.label} at 1:30 PM.</span>
         </motion.p>
 
-        {/* D. THE ADVANCED COUNTDOWN MATCH CENTER */}
+        {/* SMART COUNTDOWN */}
         <motion.div 
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.8 }}
           className="relative inline-flex flex-col items-center group"
         >
-          {/* Match Context Badge (Floating) */}
-          <div className="absolute -top-5 z-20 bg-vk-gold text-black font-bold text-[10px] md:text-xs px-4 py-1 rounded-full tracking-widest uppercase shadow-[0_0_20px_rgba(212,175,55,0.6)] group-hover:scale-105 transition-transform duration-300">
-            Next Battle vs {OPPONENT}
+          {/* DYNAMIC BADGE */}
+          <div className="absolute -top-5 z-20 bg-vk-gold text-black font-bold text-[10px] md:text-xs px-4 py-1 rounded-full tracking-widest uppercase shadow-lg group-hover:scale-105 transition-transform">
+            Next Battle: {activeMatch.opponent} ({activeMatch.label})
           </div>
 
-          {/* Glassmorphism Container */}
-          <div className="flex gap-4 md:gap-8 p-6 md:p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl group-hover:border-vk-gold/30 transition-colors duration-500">
-            
-            {/* Days */}
+          {/* TIMER CONTAINER */}
+          <div className="flex gap-4 md:gap-8 p-6 md:p-8 rounded-2xl bg-[#111] border border-white/20 shadow-2xl group-hover:border-vk-gold/50 transition-colors duration-500">
             <CountdownItem value={timeLeft.days} label="Days" />
             <Separator />
-            {/* Hours */}
             <CountdownItem value={timeLeft.hours} label="Hours" />
             <Separator />
-            {/* Minutes */}
             <CountdownItem value={timeLeft.minutes} label="Mins" />
             <Separator />
-            {/* Seconds */}
             <CountdownItem value={timeLeft.seconds} label="Secs" />
-
           </div>
         </motion.div>
 
       </div>
       
-      {/* 7. SCROLL INDICATOR BUTTON */}
+      {/* SCROLL BUTTON */}
       <motion.button 
         onClick={handleScrollDown}
         initial={{ opacity: 0 }}
@@ -565,28 +784,25 @@ export default function Hero() {
         transition={{ delay: 2, duration: 2, repeat: Infinity, ease: "easeInOut" }}
         className="absolute bottom-10 z-20 flex flex-col items-center gap-2 group cursor-pointer"
       >
-        <span className="text-white/40 text-[10px] tracking-[0.3em] uppercase group-hover:text-vk-gold transition-colors">
+        <span className="text-white/60 text-[10px] tracking-[0.3em] uppercase group-hover:text-vk-gold transition-colors">
           Scroll to Explore
         </span>
-        <div className="w-[1px] h-12 bg-gradient-to-b from-vk-gold to-transparent" />
+        <div className="w-[1px] h-12 bg-vk-gold" />
       </motion.button>
 
     </section>
   );
 }
 
-// --- HELPER COMPONENTS ---
-
+// --- HELPERS ---
 function CountdownItem({ value, label }: { value: number, label: string }) {
-  // Format number to always show 2 digits (e.g., 05 instead of 5)
   const formattedValue = value < 10 ? `0${value}` : value;
-
   return (
     <div className="flex flex-col items-center min-w-[50px] md:min-w-[80px]">
-      <span className="font-mono text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 drop-shadow-lg tabular-nums">
+      <span className="font-mono text-3xl md:text-5xl font-bold text-white drop-shadow-md tabular-nums">
         {formattedValue}
       </span>
-      <span className="text-[9px] md:text-[11px] uppercase tracking-[0.2em] text-vk-gold mt-2 font-medium opacity-80">
+      <span className="text-[9px] md:text-[11px] uppercase tracking-[0.2em] text-vk-gold mt-2 font-medium">
         {label}
       </span>
     </div>
@@ -596,7 +812,7 @@ function CountdownItem({ value, label }: { value: number, label: string }) {
 function Separator() {
   return (
     <div className="flex flex-col justify-start pt-2 md:pt-4">
-      <span className="text-2xl md:text-4xl text-white/20 animate-pulse">:</span>
+      <span className="text-2xl md:text-4xl text-white/40 animate-pulse">:</span>
     </div>
   );
 }

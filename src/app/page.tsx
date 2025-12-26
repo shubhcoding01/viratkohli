@@ -266,6 +266,7 @@
 //   );
 // }
 
+
 'use client';
 
 import dynamic from 'next/dynamic';
@@ -419,3 +420,92 @@ function FooterLink({ href, text }: { href: string; text: string }) {
     </a>
   );
 }
+
+
+// 'use client';
+
+// import dynamic from 'next/dynamic';
+// import { useState } from 'react';
+// import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
+// import { useStore } from '@/store/useStore';
+
+// import Navbar from '@/components/dom/Navbar';
+// import LoadingScreen from '@/components/dom/LoadingScreen';
+// import Intro from '@/components/dom/Intro';
+// import ScrollSkew from '@/components/ui/ScrollSkew'; // 👈 NEW
+
+//   import Hero from '@/app/(sections)/Hero';
+//  import Stats from '@/app/(sections)/Stats';   // Keeping your existing Stats
+//   import Career from '@/app/(sections)/Career';
+// import Gallery from '@/components/dom/Gallery';
+// import Legacy from '@/components/dom/Legacy'; // 👈 NEW
+
+// const Scene = dynamic(() => import('@/components/canvas/Scene'), { ssr: false });
+
+// export default function Home() {
+//   const [introFinished, setIntroFinished] = useState(false);
+//   const { isLoaded } = useStore(); 
+
+//   const { scrollYProgress } = useScroll();
+//   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+
+//   return (
+//     <main className="relative w-full min-h-screen bg-[#050505] text-white selection:bg-vk-gold selection:text-black">
+      
+//       <LoadingScreen />
+
+//       <AnimatePresence>
+//         {isLoaded && !introFinished && (
+//           <Intro onComplete={() => setIntroFinished(true)} />
+//         )}
+//       </AnimatePresence>
+
+//       <div className="fixed inset-0 z-0 pointer-events-auto">
+//         <Scene />
+//       </div>
+
+//       <motion.div
+//         initial={{ opacity: 0 }}
+//         animate={introFinished ? { opacity: 1 } : { opacity: 0 }}
+//         transition={{ duration: 1, delay: 0.5 }}
+//         className="fixed top-0 left-0 right-0 z-50 pointer-events-none"
+//       >
+//         <motion.div className="h-1 bg-vk-gold origin-left" style={{ scaleX }} />
+//         <div className="pointer-events-auto">
+//           <Navbar />
+//         </div>
+//       </motion.div>
+
+//       <motion.div 
+//         className="relative z-10 flex flex-col w-full pointer-events-none"
+//         initial={{ opacity: 0 }}
+//         animate={introFinished ? { opacity: 1 } : { opacity: 0 }}
+//         transition={{ duration: 1.5 }}
+//       >
+        
+//         {/* WRAP CONTENT IN SKEW EFFECT */}
+//         <ScrollSkew> 
+//           <div className="pointer-events-auto"><Hero /></div>
+//           <div className="pointer-events-auto"><Stats /></div>
+//           <div className="pointer-events-auto"><Career /></div>
+//           <div className="pointer-events-auto"><Gallery /></div>
+          
+//           {/* THE NEW GRAND FINALE */}
+//           <div className="pointer-events-auto"><Legacy /></div>
+//         </ScrollSkew>
+
+//         {/* Footer (Keep outside skew for stability) */}
+//         <footer className="relative w-full py-20 bg-black overflow-hidden border-t border-white/10 pointer-events-auto">
+//            {/* ... existing footer code ... */}
+//            <div className="flex flex-col items-center justify-center text-center px-4">
+//              <h2 className="font-heading text-9xl text-white/5 font-bold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none">18</h2>
+//              <p className="font-serif text-vk-gold tracking-[0.3em] uppercase text-sm mb-6 relative z-10">The Legacy Continues</p>
+//              <h3 className="font-heading text-4xl md:text-6xl text-white mb-10 relative z-10">VIRAT <span className="text-gray-500">KOHLI</span></h3>
+//              <p className="mt-20 text-white/20 text-xs tracking-widest uppercase font-mono relative z-10">© {new Date().getFullYear()} VK18 Experience.</p>
+//            </div>
+//         </footer>
+
+//       </motion.div>
+//     </main>
+//   );
+// }
