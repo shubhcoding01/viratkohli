@@ -27,7 +27,7 @@ export default function Legacy() {
         className="absolute inset-0 z-0"
       >
         <Image
-          src="/images/Virat.png" // 👈 YOUR RCB TEAM PHOTO
+          src="/images/virat.png" // 👈 YOUR RCB TEAM PHOTO
           alt="RCB Champions"
           fill
           className="object-cover brightness-50"
