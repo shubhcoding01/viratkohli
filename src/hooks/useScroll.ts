@@ -47,47 +47,132 @@
 //   return data;
 // }
 
+// 'use client';
+
+// import { useState, useEffect, useCallback } from 'react';
+// import { useScroll as useFramerScroll, useVelocity, useTransform, useSpring, useMotionValueEvent } from 'framer-motion';
+// import { useLenis } from 'lenis/react';
+
+// export default function useScroll() {
+//   // 1. GET MOTION VALUES (High Performance - No Re-renders)
+//   const { scrollY, scrollYProgress } = useFramerScroll();
+  
+//   // 2. CALCULATE VELOCITY (How fast is the user scrolling?)
+//   // Useful for skewing text or tilting 3D models based on speed
+//   const scrollVelocity = useVelocity(scrollY);
+//   const smoothVelocity = useSpring(scrollVelocity, {
+//     damping: 50,
+//     stiffness: 400
+//   });
+
+//   // 3. REACTIVE STATE (For UI Logic only, e.g., Navbar hiding)
+//   // We only update this when necessary to avoid lag
+//   const [scrollState, setScrollState] = useState({
+//     isScrolling: false,
+//     direction: 'none' as 'up' | 'down' | 'none',
+//     passedThreshold: false, // Useful for changing navbar color after Hero section
+//   });
+
+//   // 4. ACCESS LENIS (For controlling scroll)
+//   const lenis = useLenis();
+
+//   // --- LOGIC: Track Direction & Threshold ---
+//   useMotionValueEvent(scrollY, "change", (latest) => {
+//     const previous = scrollY.getPrevious() ?? 0;
+//     const diff = latest - previous;
+//     const isScrollingDown = diff > 0;
+//     const threshold = 100; // Change navbar after 100px
+
+//     setScrollState((prev) => {
+//       // optimization: only update state if values actually changed
+//       const newDirection = isScrollingDown ? 'down' : 'up';
+//       const newThreshold = latest > threshold;
+
+//       if (prev.direction === newDirection && prev.passedThreshold === newThreshold) {
+//         return prev;
+//       }
+
+//       return {
+//         ...prev,
+//         direction: newDirection,
+//         passedThreshold: newThreshold,
+//         isScrolling: true,
+//       };
+//     });
+//   });
+
+//   // --- ACTION: STOP / START SCROLLING ---
+//   const stopScroll = useCallback(() => lenis?.stop(), [lenis]);
+//   const startScroll = useCallback(() => lenis?.start(), [lenis]);
+
+//   // --- ACTION: SMOOTH SCROLL TO TARGET ---
+//   // Usage: scrollTo('#section-2') or scrollTo(500)
+//   const scrollTo = useCallback((target: string | number | HTMLElement, offset = 0) => {
+//     if (!lenis) return;
+//     lenis.scrollTo(target, {
+//       offset: offset,
+//       duration: 1.5,
+//       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential easing
+//     });
+//   }, [lenis]);
+
+//   return {
+//     // A. Motion Values (Pass these to <motion.div> for 60fps animations)
+//     scrollY,
+//     progress: scrollYProgress,
+//     velocity: smoothVelocity,
+
+//     // B. UI State (Use these for conditional rendering like Navbars)
+//     direction: scrollState.direction,
+//     passedThreshold: scrollState.passedThreshold,
+    
+//     // C. Actions (Control the page)
+//     scrollTo,
+//     stopScroll,
+//     startScroll,
+//   };
+// }
+
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useScroll as useFramerScroll, useVelocity, useTransform, useSpring, useMotionValueEvent } from 'framer-motion';
+import { useScroll as useFramerScroll, useVelocity, useSpring, useMotionValueEvent } from 'framer-motion';
 import { useLenis } from 'lenis/react';
 
 export default function useScroll() {
-  // 1. GET MOTION VALUES (High Performance - No Re-renders)
   const { scrollY, scrollYProgress } = useFramerScroll();
-  
-  // 2. CALCULATE VELOCITY (How fast is the user scrolling?)
-  // Useful for skewing text or tilting 3D models based on speed
+  const lenis = useLenis();
+
+  // 1. VELOCITY PHYSICS
   const scrollVelocity = useVelocity(scrollY);
   const smoothVelocity = useSpring(scrollVelocity, {
     damping: 50,
     stiffness: 400
   });
 
-  // 3. REACTIVE STATE (For UI Logic only, e.g., Navbar hiding)
-  // We only update this when necessary to avoid lag
+  // 2. UI STATE
   const [scrollState, setScrollState] = useState({
     isScrolling: false,
     direction: 'none' as 'up' | 'down' | 'none',
-    passedThreshold: false, // Useful for changing navbar color after Hero section
+    passedThreshold: false,
   });
 
-  // 4. ACCESS LENIS (For controlling scroll)
-  const lenis = useLenis();
+  // 3. THRESHOLD LOGIC (Refactored for reuse)
+  const threshold = 100;
 
-  // --- LOGIC: Track Direction & Threshold ---
-  useMotionValueEvent(scrollY, "change", (latest) => {
+  const handleScrollChange = useCallback((latest: number) => {
     const previous = scrollY.getPrevious() ?? 0;
     const diff = latest - previous;
     const isScrollingDown = diff > 0;
-    const threshold = 100; // Change navbar after 100px
+    
+    // Only update if moving more than 5px to avoid micro-jitters
+    if (Math.abs(diff) < 5 && latest > 0) return; 
 
     setScrollState((prev) => {
-      // optimization: only update state if values actually changed
       const newDirection = isScrollingDown ? 'down' : 'up';
       const newThreshold = latest > threshold;
 
+      // Performance: Only update state if values actually changed
       if (prev.direction === newDirection && prev.passedThreshold === newThreshold) {
         return prev;
       }
@@ -99,34 +184,44 @@ export default function useScroll() {
         isScrolling: true,
       };
     });
-  });
+  }, [scrollY]);
 
-  // --- ACTION: STOP / START SCROLLING ---
+  // 4. LISTENER: SCROLL EVENTS
+  useMotionValueEvent(scrollY, "change", handleScrollChange);
+
+  // 5. FIX: SYNC ON MOUNT (Handles page reload at bottom)
+  useEffect(() => {
+    // Check immediate scroll position
+    const initialY = window.scrollY;
+    if (initialY > threshold) {
+      setScrollState(prev => ({
+        ...prev,
+        passedThreshold: true,
+        // Assume 'down' if we start lower down so navbar hides correctly if configured that way
+        direction: 'down' 
+      }));
+    }
+  }, []);
+
+  // 6. ACTIONS
   const stopScroll = useCallback(() => lenis?.stop(), [lenis]);
   const startScroll = useCallback(() => lenis?.start(), [lenis]);
-
-  // --- ACTION: SMOOTH SCROLL TO TARGET ---
-  // Usage: scrollTo('#section-2') or scrollTo(500)
+  
   const scrollTo = useCallback((target: string | number | HTMLElement, offset = 0) => {
     if (!lenis) return;
     lenis.scrollTo(target, {
       offset: offset,
       duration: 1.5,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential easing
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
   }, [lenis]);
 
   return {
-    // A. Motion Values (Pass these to <motion.div> for 60fps animations)
     scrollY,
     progress: scrollYProgress,
     velocity: smoothVelocity,
-
-    // B. UI State (Use these for conditional rendering like Navbars)
     direction: scrollState.direction,
     passedThreshold: scrollState.passedThreshold,
-    
-    // C. Actions (Control the page)
     scrollTo,
     stopScroll,
     startScroll,
