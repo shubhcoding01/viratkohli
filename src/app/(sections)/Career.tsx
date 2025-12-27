@@ -568,6 +568,8 @@ export default function Career() {
   const containerRef = useRef(null);
   const { setMode } = useStore();
 
+  const [activeIndex, setActiveIndex] = useState(0);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start center", "end center"]
