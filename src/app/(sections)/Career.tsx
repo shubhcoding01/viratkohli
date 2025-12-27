@@ -579,7 +579,32 @@ export default function Career() {
 
   return (
     <section id="section-career" ref={containerRef} className="relative w-full py-24 bg-[#050505] overflow-hidden">
-      
+      {/* 👇 INSERT THIS BLOCK AT THE TOP OF SECTION */}
+    {/* This creates the fixed background that changes as you scroll */}
+    <div className="sticky top-0 left-0 w-full h-screen z-0 overflow-hidden">
+       {milestones.map((item, index) => (
+         <div 
+           key={item.id}
+           className={cn(
+             "absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out",
+             activeIndex === index ? "opacity-30" : "opacity-0" // Controls Fade
+           )}
+         >
+           <Image 
+             src={item.img} 
+             alt="Background"
+             fill
+             className={cn(
+                "object-cover grayscale", 
+                item.year === "2008" ? "object-top" : "object-center"
+             )}
+           />
+           {/* Gradients to "mix up" the image with the black background */}
+           <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/90 to-transparent" />
+           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#050505]" />
+         </div>
+       ))}
+    </div>
       {/* SECTION TITLE */}
       <div className="text-center mb-24 relative z-10">
         <h2 className="font-heading text-6xl md:text-8xl text-white drop-shadow-2xl">
