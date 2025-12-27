@@ -502,84 +502,72 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useStore } from '@/store/useStore';
 
-// --- CONFIGURATION: CAREER MILESTONES ---
-// Ensure these images exist in your public/images/ folder.
-// I have assumed extensions are .png or .jpg based on typical use. 
-// Check your folder if they are .jpeg or .webp!
-
+// --- CONFIGURATION: CHRONOLOGICAL ORDER ---
 const milestones = [
   {
     id: 0,
     year: "2008",
     mode: "classic",
     title: "The Arrival",
-    description: "Leads India to U19 World Cup glory in Kuala Lumpur. Makes his ODI debut against Sri Lanka. A star is born.",
-    img: "/images/virat2008.png" // Updated
+    description: "Leads India to U19 World Cup glory. A star is born in Kuala Lumpur.",
+    img: "/images/virat2008.png" 
   },
   {
     id: 1,
     year: "2011",
     mode: "classic",
     title: "World Champion",
-    description: "Carries Sachin Tendulkar on his shoulders at Wankhede. 'He has carried the burden of the nation for 21 years.'",
-    img: "/images/virat2011.png" // Updated
+    description: "Carries Sachin Tendulkar on his shoulders. The burden of 21 years is lifted.",
+    img: "/images/virat2011.png" 
   },
-  {
-    id: 2,
-    year: "2013",
-    mode: "classic",
-    title: "Champions Trophy",
-    description: "Part of the young brigade that conquered England. The cabinet starts filling up with ICC Silverware.",
-    img: "/images/viratchampion.png" // Updated
-  },
+
   {
     id: 3,
     year: "2014",
     mode: "aggressive",
     title: "Test Captaincy",
-    description: "Takes over the reins in Adelaide. Scores 692 runs in the Australian series. The 'Aggressive Era' begins.",
-    img: "/images/viratcaptain.png" // Updated
+    description: "Takes over in Adelaide. Scores 692 runs in Australia. The 'Aggressive Era' begins.",
+    img: "/images/viratcaptain.png" 
   },
   {
     id: 4,
     year: "2016",
     mode: "aggressive",
     title: "The 973 Season",
-    description: "Smashes 4 centuries in a single IPL season. Redefines consistency in T20 cricket. Pure dominance.",
-    img: "/images/virat2016.png" // Updated
+    description: "Smashes 4 centuries in a single IPL season. Pure dominance defined.",
+    img: "/images/virat2016.png" 
   },
   {
     id: 5,
     year: "2023",
     mode: "idle",
     title: "The 50th Century",
-    description: "Breaks the God's record. Becomes the first human to score 50 ODI hundreds at the World Cup semi-final.",
-    img: "/images/virat50th.png" // Updated
+    description: "Breaks the God's record. The first human to score 50 ODI hundreds.",
+    img: "/images/virat50th.png" 
   },
   {
     id: 6,
     year: "2024",
     mode: "idle",
     title: "T20 World Glory",
-    description: "The wait ends in Barbados. Plays the anchor in the final and retires from T20Is as a Champion.",
-    img: "/images/viratt20.png" // Updated
+    description: "Retires from T20Is as a Champion. The anchor of the final in Barbados.",
+    img: "/images/viratt20.png" 
   },
+
   {
     id: 7,
     year: "2025",
-    mode: "idle", // Royal Mode
-    title: "Ee Sala Cup Namde",
-    description: "The dream finally comes true. Lifts the IPL Trophy for RCB, completing the final piece of his legacy.",
-    img: "/images/viratbg1.png" // Updated (Using the Cup Winning Photo)
+    mode: "idle",
+    title: "IPL Champions",
+    description: "The dream comes true. RCB lifts the trophy. The legacy is complete.",
+    img: "/images/viratbg1.png" 
   }
 ];
 
 export default function Career() {
-  const [activeTab, setActiveTab] = useState(0);
   const containerRef = useRef(null);
   const { setMode } = useStore();
 
-  // SCROLL PROGRESS
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start center", "end center"]
@@ -588,161 +576,184 @@ export default function Career() {
   const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="section-career" ref={containerRef} className="relative min-h-screen w-full py-20 overflow-hidden bg-[#050505]">
+    <section id="section-career" ref={containerRef} className="relative w-full py-24 bg-[#050505] overflow-hidden">
       
-      {/* 1. DYNAMIC BACKGROUND STACK */}
-      {/* This creates the changing background effect as you scroll */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        {milestones.map((item, index) => (
-          <div 
-            key={item.id}
-            className={cn(
-              "absolute inset-0 transition-all duration-1000 ease-in-out",
-              activeTab === index ? "opacity-40 scale-105" : "opacity-0 scale-100"
-            )}
-          >
-            <Image
-              src={item.img}
-              alt={item.title}
-              fill
-              className="object-cover object-center blur-sm"
-              priority={index < 2} // Preload first two for performance
-            />
-            {/* Dark Gradients for Text Readability */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/90 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#050505]" />
-          </div>
-        ))}
+      {/* SECTION TITLE */}
+      <div className="text-center mb-24 relative z-10">
+        <h2 className="font-heading text-6xl md:text-8xl text-white drop-shadow-2xl">
+          TIMELINE <span className="text-vk-gold">OF A KING</span>
+        </h2>
+        <p className="text-gray-500 font-mono text-xs tracking-widest uppercase mt-4">
+          Hover cards to reveal the moment
+        </p>
       </div>
 
-      <div className="relative z-10 px-6 md:px-20 max-w-7xl mx-auto flex flex-col md:flex-row gap-12 md:gap-24">
+      <div className="relative max-w-6xl mx-auto px-4">
         
-        {/* 2. LEFT SIDE: STICKY TITLE */}
-        <div className="md:w-1/3">
-          <div className="sticky top-40">
-            <motion.div 
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <h2 className="font-heading text-6xl md:text-8xl text-white mb-6 drop-shadow-xl">
-                THE <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-vk-gold to-[#B8860B]">
-                  JOURNEY
-                </span>
-              </h2>
-              <div className="h-1 w-24 bg-vk-gold mb-6" />
-              <p className="font-body text-gray-400 text-lg leading-relaxed">
-                Witness the evolution of a legend. From a young boy in Delhi to the undisputed King of World Cricket.
-              </p>
-            </motion.div>
-          </div>
+        {/* CENTER LINE */}
+        <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-[2px] bg-white/10 -translate-x-1/2 rounded-full overflow-hidden">
+           <motion.div 
+             className="w-full bg-vk-gold shadow-[0_0_20px_#FFD700]" 
+             style={{ height: lineHeight }} 
+           />
         </div>
 
-        {/* 3. RIGHT SIDE: SCROLL-SYNCED TIMELINE */}
-        <div className="md:w-2/3 relative pl-8 md:pl-12">
-          
-          {/* Glowing Vertical Beam */}
-          <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-white/10 overflow-hidden rounded-full">
-            <motion.div 
-              className="w-full bg-vk-gold shadow-[0_0_20px_#FFD700]"
-              style={{ height: lineHeight }} 
+        {/* TIMELINE ITEMS */}
+        <div className="flex flex-col gap-24 md:gap-32">
+          {milestones.map((item, index) => (
+            <TimelineItem 
+              key={index} 
+              item={item} 
+              index={index} 
+              isLeft={index % 2 === 0} // Alternate Left/Right
+              setMode={setMode}
             />
-          </div>
-
-          <div className="flex flex-col gap-32 py-20"> {/* Increased gap for better pacing */}
-            {milestones.map((item, index) => (
-              <CareerItem 
-                key={index} 
-                item={item} 
-                index={index} 
-                isActive={activeTab === index}
-                onActivate={() => {
-                   setActiveTab(index);
-                   // @ts-ignore
-                   setMode(item.mode);
-                }}
-              />
-            ))}
-          </div>
-
+          ))}
         </div>
 
       </div>
+
     </section>
   );
 }
 
-// 4. SUB-COMPONENT: INDIVIDUAL CAREER CARD
-function CareerItem({ item, index, isActive, onActivate }: any) {
+function TimelineItem({ item, index, isLeft, setMode }: any) {
   const ref = useRef(null);
-  // Trigger earlier (margin -40%) so images change before the text hits the exact center
   const isInView = useInView(ref, { margin: "-40% 0px -40% 0px", amount: 0.5 });
 
+  // Update 3D Mode when scrolled to
   useEffect(() => {
-    if (isInView) {
-      onActivate();
-    }
-  }, [isInView, onActivate]);
+    if (isInView) setMode(item.mode);
+  }, [isInView, item.mode, setMode]);
 
   return (
-    <motion.div
+    <div 
       ref={ref}
-      initial={{ opacity: 0, x: 50 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 0.6, delay: 0.1 }}
       className={cn(
-        "relative p-8 md:p-10 rounded-2xl border transition-all duration-700 group",
-        isActive 
-          ? "bg-white/5 border-vk-gold/60 shadow-[0_0_40px_-10px_rgba(212,175,55,0.3)] backdrop-blur-md scale-100 md:scale-105" 
-          : "bg-transparent border-white/5 opacity-40 hover:opacity-60 blur-[1px] hover:blur-0"
+        "relative flex items-center md:justify-between",
+        // Mobile: All align left | Desktop: Alternate
+        isLeft ? "md:flex-row" : "md:flex-row-reverse"
       )}
     >
-      {/* Connector Dot */}
-      <div className={cn(
-        "absolute -left-[43px] md:-left-[59px] top-10 w-6 h-6 rounded-full border-4 transition-all duration-500 z-20",
-        isActive 
-          ? "bg-[#050505] border-vk-gold shadow-[0_0_20px_#FFD700] scale-125" 
-          : "bg-[#050505] border-white/20"
-      )} />
+      
+      {/* 1. THE SPACER (Empty side to push content) */}
+      <div className="hidden md:block w-5/12" />
 
-      {/* Year Label */}
-      <span className={cn(
-        "font-heading text-6xl md:text-8xl transition-colors duration-500 block mb-4",
-        isActive ? "text-white drop-shadow-2xl" : "text-white/10"
-      )}>
+      {/* 2. THE CONNECTOR DOT (Center) */}
+      <div className="absolute left-4 md:left-1/2 -translate-x-1/2 w-8 h-8 flex items-center justify-center z-20">
+         <motion.div 
+           initial={{ scale: 0 }}
+           whileInView={{ scale: 1 }}
+           className={cn(
+             "w-4 h-4 rounded-full border-2 transition-colors duration-500",
+             isInView ? "bg-vk-gold border-vk-gold shadow-[0_0_15px_#FFD700]" : "bg-black border-white/20"
+           )}
+         />
+      </div>
+
+      {/* 3. THE FLIP CARD (Content Side) */}
+      <motion.div 
+        initial={{ opacity: 0, x: isLeft ? -50 : 50 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6 }}
+        className="w-full md:w-5/12 pl-12 md:pl-0 perspective-1000 group h-[500px] cursor-pointer"
+      >
+        
+        {/* PRESERVE-3D WRAPPER */}
+        <div className="relative w-full h-full transition-transform duration-700 preserve-3d group-hover:rotate-y-180">
+          
+          {/* === FRONT SIDE (TEXT) === */}
+          {/* <div className="absolute inset-0 backface-hidden bg-white/5 border border-white/10 p-8 rounded-2xl flex flex-col justify-center backdrop-blur-sm">
+             <span className="font-heading text-6xl text-white/10 absolute top-4 right-4">
+               {item.year}
+             </span>
+             
+             <h3 className="font-heading text-4xl text-vk-gold mb-2">
+               {item.year}
+             </h3>
+             <h4 className="font-serif text-xl text-white uppercase tracking-widest mb-4">
+               {item.title}
+             </h4>
+             <p className="font-body text-gray-400 text-sm leading-relaxed">
+               {item.description}
+             </p>
+
+             <div className="mt-6 flex items-center gap-2 text-[10px] text-vk-gold/60 uppercase tracking-widest font-mono">
+                <span>[ Hover to View Image ]</span>
+                <div className="w-4 h-[1px] bg-vk-gold/40" />
+             </div>
+          </div> */}
+
+          {/* === FRONT SIDE (TEXT) === */}
+<div className="absolute inset-0 backface-hidden border border-white/10 rounded-2xl overflow-hidden relative bg-[#050505]">
+   
+   {/* 1. BACKGROUND IMAGE (Colorful & Faded) */}
+   <div className="absolute inset-0 w-full h-full">
+     <Image 
+       src={item.img}
+       alt={item.title}
+       fill
+       className={cn(
+         "object-cover opacity-80", // ✅ Colorful (No grayscale), High Opacity
+         item.year === "2008" ? "object-top" : "object-center"
+       )}
+     />
+   </div>
+   
+   {/* 2. THE MAGIC GRADIENT (Hides Right Side) */}
+   {/* Transparent on Left -> Solid Black on Right */}
+   <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/80 to-black z-10" />
+
+   {/* 3. CONTENT (Aligns to Right where it's dark) */}
+   <div className="relative z-20 p-8 h-full flex flex-col justify-center text-right items-end">
+      <span className="font-heading text-6xl text-white/10 absolute top-4 left-4">
         {item.year}
       </span>
       
-      {/* Title */}
-      <h3 className={cn(
-        "font-serif text-2xl md:text-4xl uppercase tracking-widest mb-4 transition-colors duration-500",
-        isActive ? "text-vk-gold" : "text-gray-600"
-      )}>
-        {item.title}
+      <h3 className="font-heading text-4xl text-vk-gold mb-2 drop-shadow-lg">
+        {item.year}
       </h3>
-      
-      {/* Description */}
-      <p className={cn(
-         "font-body text-lg leading-relaxed transition-colors duration-500",
-         isActive ? "text-gray-200" : "text-gray-600"
-      )}>
+      <h4 className="font-serif text-xl text-white uppercase tracking-widest mb-4 drop-shadow-md">
+        {item.title}
+      </h4>
+      <p className="font-body text-gray-200 text-sm leading-relaxed drop-shadow-md font-medium max-w-[80%]">
         {item.description}
       </p>
 
-      {/* Special Badge for RCB Win */}
-      {item.year === "2025" && isActive && (
-         <motion.div 
-           initial={{ opacity: 0, scale: 0.8 }}
-           animate={{ opacity: 1, scale: 1 }}
-           className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-vk-red/50 bg-gradient-to-r from-vk-red/20 to-black"
-         >
-            <div className="w-2 h-2 rounded-full bg-vk-red animate-pulse" />
-            <span className="text-vk-red text-xs font-bold uppercase tracking-widest">IPL CHAMPIONS</span>
-         </motion.div>
-      )}
+      <div className="mt-6 flex items-center gap-2 text-[10px] text-vk-gold uppercase tracking-widest font-mono font-bold">
+        <div className="w-4 h-[1px] bg-vk-gold" />
+        <span>[ Hover to Reveal ]</span>
+      </div>
+   </div>
+</div>
 
-    </motion.div>
+          {/* === BACK SIDE (IMAGE) === */}
+          {/* Rotated 180deg so it's behind the front face */}
+          <div className="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl overflow-hidden border border-vk-gold/30">
+             <Image 
+  src={item.img} 
+  alt={item.title}
+  fill
+  // 👇 IF year is 2008 use "object-top", ELSE use just "object-cover"
+  className={cn(
+    "object-cover", 
+    item.year === "2008" ? "object-top" : "object-center"
+  )}
+/>
+             {/* Gradient Overlay for Text Readability if needed */}
+             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+             
+             <div className="absolute bottom-4 left-4 right-4">
+                <span className="text-white font-heading text-2xl drop-shadow-lg">
+                  {item.title}
+                </span>
+             </div>
+          </div>
+
+        </div>
+
+      </motion.div>
+
+    </div>
   );
 }

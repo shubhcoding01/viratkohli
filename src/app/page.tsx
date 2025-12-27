@@ -392,9 +392,28 @@ export default function Home() {
              
              {/* "18" Logo */}
              
-             <h2 className="font-heading text-9xl text-white/5 font-bold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none">
+             {/* <h2 className="font-heading text-9xl text-white/5 font-bold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none">
                18
-             </h2>
+             </h2> */}
+
+             <h2 
+  className="font-heading text-[12rem] md:text-[20rem] font-bold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none z-0"
+  style={{
+    // 1. 3D Gradient Fill (Metallic Dark Grey)
+    background: 'linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)',
+    backgroundClip: 'text',
+    WebkitBackgroundClip: 'text',
+    color: 'transparent',
+
+    // 2. Gold Outline (The "Stroke")
+    WebkitTextStroke: '2px rgba(212, 175, 55, 0.2)',
+
+    // 3. Deep Shadow (The 3D Depth)
+    filter: 'drop-shadow(0px 20px 30px rgba(0,0,0,0.8))'
+  }}
+>
+  18
+</h2>
 
              <p className="font-serif text-vk-gold tracking-[0.3em] uppercase text-sm mb-6 relative z-10">
                The Legacy Continues

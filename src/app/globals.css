@@ -177,3 +177,23 @@ body {
 .animate-marquee {
   animation-play-state: var(--marquee-play-state);
 }
+
+/* In src/app/globals.css @theme or @layer utilities */
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* src/app/globals.css inside @layer utilities or @theme */
+.preserve-3d { transform-style: preserve-3d; }
+.backface-hidden { backface-visibility: hidden; }
+/* The rotate-y-180 class is no longer needed as JS handles it now */
