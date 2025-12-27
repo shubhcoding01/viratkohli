@@ -627,7 +627,7 @@ export default function Career() {
 
         {/* TIMELINE ITEMS */}
         <div className="flex flex-col gap-24 md:gap-32">
-          {milestones.map((item, index) => (
+          {/* {milestones.map((item, index) => (
             <TimelineItem 
               key={index} 
               item={item} 
@@ -635,7 +635,17 @@ export default function Career() {
               isLeft={index % 2 === 0} // Alternate Left/Right
               setMode={setMode}
             />
-          ))}
+          ))} */}
+          {milestones.map((item, index) => (
+          <TimelineItem 
+            key={index} 
+            item={item} 
+            index={index} 
+            isLeft={index % 2 === 0} 
+            setMode={setMode}
+            setActiveIndex={setActiveIndex} // <--- ADD THIS PROP
+          />
+        ))}
         </div>
 
       </div>
@@ -644,14 +654,20 @@ export default function Career() {
   );
 }
 
-function TimelineItem({ item, index, isLeft, setMode }: any) {
+function TimelineItem({ item, index, isLeft, setMode,setActiveIndex }: any) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { margin: "-40% 0px -40% 0px", amount: 0.5 });
-
+  // const isInView = useInView(ref, { margin: "-40% 0px -40% 0px", amount: 0.5 });
+  const isInView = useInView(ref, { margin: "-50% 0px -50% 0px", amount: 0.1 });
   // Update 3D Mode when scrolled to
+  // useEffect(() => {
+  //   if (isInView) setMode(item.mode);
+  // }, [isInView, item.mode, setMode]);
   useEffect(() => {
-    if (isInView) setMode(item.mode);
-  }, [isInView, item.mode, setMode]);
+    if (isInView) {
+        setMode(item.mode);
+        setActiveIndex(index); // 👈 ADD THIS: Updates the background image
+    }
+  }, [isInView, item.mode, setMode, index, setActiveIndex]);
 
   return (
     <div 
