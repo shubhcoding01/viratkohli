@@ -425,8 +425,8 @@ export default function Home() {
              </h3>
 
              <div className="flex items-center gap-8 relative z-10">
-               <FooterLink href="#" text="Instagram" />
-               <FooterLink href="#" text="Twitter" />
+               <FooterLink href="https://www.instagram.com/virat.kohli/" text="Instagram" />
+               <FooterLink href="https://x.com/imVkohli" text="Twitter" />
                <FooterLink href="#" text="Stats" />
              </div>
 
