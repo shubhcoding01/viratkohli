@@ -161,3 +161,19 @@ body {
 .animate-scanline {
   animation: scanline 4s linear infinite;
 }
+
+/* Add this inside your @theme or root css */
+@theme {
+  /* ... existing theme items ... */
+  --animate-marquee: marquee 30s linear infinite;
+  --marquee-play-state: running;
+
+  @keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-100%); }
+  }
+}
+
+.animate-marquee {
+  animation-play-state: var(--marquee-play-state);
+}
