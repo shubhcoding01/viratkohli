@@ -284,6 +284,9 @@ import Intro from '@/components/dom/Intro';
  import Stats from '@/app/(sections)/Stats';   // Keeping your existing Stats
  import Career from '@/app/(sections)/Career';
 import Gallery from '@/components/dom/Gallery';
+import Brands from '@/components/dom/Brands';
+import ScrollSkew from '@/components/ui/ScrollSkew';
+import Legacy from '@/components/dom/Legacy';
 
 // --- 3D SCENE (Lazy Loaded) ---
 // We disable SSR because 3D canvas requires the window object
@@ -368,6 +371,17 @@ export default function Home() {
         <div className="pointer-events-auto">
            <Gallery />
         </div>
+
+        {/* BRANDS MARQUEE (Infinite Scroll) */}
+        <ScrollSkew>
+  {/* ... other sections ... */}
+  <div className="pointer-events-auto"><Legacy /></div>
+  
+  {/* 2. Add Brands Here */}
+  <div className="pointer-events-auto">
+     <Brands />
+  </div>
+</ScrollSkew>
         
         {/* 6. ADVANCED FOOTER */}
         <footer className="relative w-full py-20 bg-black overflow-hidden border-t border-white/10 pointer-events-auto">
