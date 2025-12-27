@@ -163,7 +163,7 @@ export default function LoadingScreen() {
           {[...Array(5)].map((_, i) => (
             <motion.div
               key={i}
-              variants={columnVariants}
+              // variants={columnVariants}
               className="relative h-full w-full border-r border-white/5 last:border-r-0 overflow-hidden z-10"
             >
                <div className="absolute inset-0 opacity-10 bg-[url('/images/noise.png')]" />
