@@ -57,7 +57,6 @@ export default function SmoothScrolling({ children }: { children: React.ReactNod
         orientation: 'vertical',
         gestureOrientation: 'vertical',
         syncTouch: true, // Fixes keyboard scrolling issues
-        bgTouch: true,   // Allows touch events to pass through background
       }}
     >
       {children}
