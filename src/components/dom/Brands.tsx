@@ -85,29 +85,24 @@
 //     </motion.div>
 //   );
 // }
-
 'use client';
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
 // --- CONFIGURATION ---
-// Save your images in: public/images/brands/
+// Ensure these exact files exist in: public/images/brands/
 const BRANDS = [
   { name: "PUMA", file: "puma.png", type: "Athletic Partner" },
   { name: "MRF", file: "mrf.png", type: "Bat Sponsor" },
   { name: "AUDI", file: "audi.png", type: "Automotive" },
   { name: "MYNTRA", file: "myntra.png", type: "Fashion" },
   { name: "HSBC", file: "hsbc.png", type: "Banking" },
-  { name: "WRONG", file: "wrong.png", type: "Mobility" },
-//   { name: "STAR SPORTS", file: "starsports.png", type: "Broadcaster" },
-//   { name: "DUROFLEX", file: "duroflex.png", type: "Sleep Solutions" },
+  { name: "WROGN", file: "wrong.png", type: "Lifestyle Brand" }, // Corrected spelling for display, kept filename 'wrong.png' as per your code
   { name: "NOISE", file: "noise.png", type: "Wearables" },
-  { name: "AMERICAN TOURISTER", file: "american.png", type: "Plant Protein" },
-  { name: "ONE 8", file: "one8.png", type: "Coffee" },
-//   { name: "LIVSPACE", file: "livspace.png", type: "Interiors" },
+  { name: "AMERICAN TOURISTER", file: "american.png", type: "Travel Gear" },
+  { name: "ONE8", file: "one8.png", type: "Own Brand" },
   { name: "MANYAVAR", file: "manyavar.png", type: "Celebration Wear" },
-//   { name: "TOO YUMM!", file: "tooyumm.png", type: "Snacking" },
 ];
 
 export default function Brands() {
@@ -126,15 +121,16 @@ export default function Brands() {
 
       {/* INFINITE MARQUEE */}
       <div className="relative flex w-full overflow-hidden mask-gradient"
-           // Pause animation on hover
+           // Pause animation on hover for better user experience
            onMouseEnter={() => document.documentElement.style.setProperty('--marquee-play-state', 'paused')}
            onMouseLeave={() => document.documentElement.style.setProperty('--marquee-play-state', 'running')}
       >
+        {/* We need 3 groups to ensure seamless looping without gaps */}
         <MarqueeGroup />
         <MarqueeGroup />
         <MarqueeGroup />
         
-        {/* Faded Edges */}
+        {/* Faded Edges (Gradient Masks) */}
         <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#050505] to-transparent z-20 pointer-events-none" />
         <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#050505] to-transparent z-20 pointer-events-none" />
       </div>
@@ -161,10 +157,10 @@ function MarqueeGroup() {
              />
            </div>
 
-           {/* GLOW */}
+           {/* GLOW EFFECT ON HOVER */}
            <div className="absolute -inset-4 bg-vk-gold/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
            
-           {/* TYPE TAG */}
+           {/* TYPE TAG (e.g. "Bat Sponsor") */}
            <span className="absolute -bottom-8 text-[9px] font-mono text-vk-gold tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 pointer-events-none whitespace-nowrap">
              {brand.type}
            </span>
