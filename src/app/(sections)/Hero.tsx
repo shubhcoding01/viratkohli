@@ -10,7 +10,13 @@ import useMouse from '@/hooks/useMouse';
 const SCHEDULE = [
   { id: 1, date: '2026-01-11T13:30:00', label: "1st ODI", opponent: "New Zealand" },
   { id: 2, date: '2026-01-14T13:30:00', label: "2nd ODI", opponent: "New Zealand" },
-  { id: 3, date: '2026-01-18T13:30:00', label: "3rd ODI", opponent: "New Zealand" }
+  { id: 3, date: '2026-01-18T13:30:00', label: "3rd ODI", opponent: "New Zealand" },
+
+  // --- IPL 2026 Phase 1 (Defending Champions: RCB) ---
+  { id: 4, date: '2026-03-28T19:30:00', label: "IPL Match 1", opponent: "Sunrisers Hyderabad" },
+  { id: 5, date: '2026-04-05T19:30:00', label: "IPL Match 2", opponent: "Chennai Super Kings" },
+  { id: 6, date: '2026-04-10T19:30:00', label: "IPL Match 3", opponent: "Rajasthan Royals" },
+  { id: 7, date: '2026-04-12T19:30:00', label: "IPL Match 4", opponent: "Mumbai Indians" }
 ];
 
 export default function Hero() {
