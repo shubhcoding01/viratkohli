@@ -131,10 +131,34 @@ export default function Hero() {
            transition={{ duration: 0.8, delay: 0.6 }}
            className="border-l-4 border-vk-gold pl-6 mb-12"
         >
-           <p className="text-gray-300 text-lg md:text-xl leading-relaxed max-w-lg">
+           {/* <p className="text-gray-300 text-lg md:text-xl leading-relaxed max-w-lg">
              The King returns to face New Zealand. <br />
              <span className="text-white font-bold">{activeMatch.label} at 1:30 PM.</span>
-           </p>
+           </p> */}
+
+           {/* Create a readable time (e.g., "1:30 PM" or "7:30 PM") from the match date */}
+{(() => {
+  const matchTime = new Date(activeMatch.date).toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+
+  // Check if it's an IPL match to change the hype text slightly
+  const isIPL = activeMatch.label.includes("IPL");
+  const hypeText = isIPL 
+    ? "The King steps into the arena against" 
+    : "The King returns to face";
+
+  return (
+    <p className="text-gray-300 text-lg md:text-xl leading-relaxed max-w-lg">
+      {hypeText} <span className="text-vk-gold font-bold">{activeMatch.opponent}</span>.<br />
+      <span className="text-white font-bold">
+        {activeMatch.label} at {matchTime}.
+      </span>
+    </p>
+  );
+})()}
         </motion.div>
 
         {/* SMART COUNTDOWN (Left Aligned) */}
