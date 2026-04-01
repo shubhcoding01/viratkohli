@@ -7,16 +7,192 @@ import { useStore } from '@/store/useStore';
 import useMouse from '@/hooks/useMouse';
 
 // --- SMART SCHEDULE CONFIGURATION ---
-const SCHEDULE = [
-  { id: 1, date: '2026-01-11T13:30:00', label: "1st ODI", opponent: "New Zealand" },
-  { id: 2, date: '2026-01-14T13:30:00', label: "2nd ODI", opponent: "New Zealand" },
-  { id: 3, date: '2026-01-18T13:30:00', label: "3rd ODI", opponent: "New Zealand" },
+// const SCHEDULE = [
+//   { id: 1, date: '2026-01-11T13:30:00', label: "1st ODI", opponent: "New Zealand" },
+//   { id: 2, date: '2026-01-14T13:30:00', label: "2nd ODI", opponent: "New Zealand" },
+//   { id: 3, date: '2026-01-18T13:30:00', label: "3rd ODI", opponent: "New Zealand" },
 
-  // --- IPL 2026 Phase 1 (Defending Champions: RCB) ---
-  { id: 4, date: '2026-03-28T19:30:00', label: "IPL Match 1", opponent: "Sunrisers Hyderabad" },
-  { id: 5, date: '2026-04-05T19:30:00', label: "IPL Match 2", opponent: "Chennai Super Kings" },
-  { id: 6, date: '2026-04-10T19:30:00', label: "IPL Match 3", opponent: "Rajasthan Royals" },
-  { id: 7, date: '2026-04-12T19:30:00', label: "IPL Match 4", opponent: "Mumbai Indians" }
+//   // --- IPL 2026 Phase 1 (Defending Champions: RCB) ---
+//   { id: 4, date: '2026-03-28T19:30:00', label: "IPL Match 1", opponent: "Sunrisers Hyderabad" },
+//   { id: 5, date: '2026-04-05T19:30:00', label: "IPL Match 2", opponent: "Chennai Super Kings" },
+//   { id: 6, date: '2026-04-10T19:30:00', label: "IPL Match 3", opponent: "Rajasthan Royals" },
+//   { id: 7, date: '2026-04-12T19:30:00', label: "IPL Match 4", opponent: "Mumbai Indians" }
+// ];
+
+const SCHEDULE = [
+  // --- International Matches (India vs New Zealand) ---
+  { 
+    id: 1, 
+    date: '2026-01-11T13:30:00', 
+    label: "1st ODI", 
+    opponent: "New Zealand",
+    venue: "Wankhede Stadium",
+    location: "Mumbai, IND",
+    format: "ODI",
+    isHome: true
+  },
+  { 
+    id: 2, 
+    date: '2026-01-14T13:30:00', 
+    label: "2nd ODI", 
+    opponent: "New Zealand",
+    venue: "Eden Gardens",
+    location: "Kolkata, IND",
+    format: "ODI",
+    isHome: true
+  },
+  { 
+    id: 3, 
+    date: '2026-01-18T13:30:00', 
+    label: "3rd ODI", 
+    opponent: "New Zealand",
+    venue: "Narendra Modi Stadium",
+    location: "Ahmedabad, IND",
+    format: "ODI",
+    isHome: true
+  },
+
+  // --- IPL 2026 Full League Stage (Royal Challengers Bengaluru) ---
+  { 
+    id: 4, 
+    date: '2026-03-28T19:30:00', 
+    label: "IPL Match 1", 
+    opponent: "Sunrisers Hyderabad",
+    venue: "M. Chinnaswamy Stadium",
+    location: "Bengaluru, IND",
+    format: "T20",
+    isHome: true 
+  },
+  { 
+    id: 5, 
+    date: '2026-04-05T19:30:00', 
+    label: "IPL Match 2", 
+    opponent: "Chennai Super Kings",
+    venue: "M. Chinnaswamy Stadium",
+    location: "Bengaluru, IND",
+    format: "T20",
+    isHome: true 
+  },
+  { 
+    id: 6, 
+    date: '2026-04-10T19:30:00', 
+    label: "IPL Match 3", 
+    opponent: "Rajasthan Royals",
+    venue: "Sawai Mansingh Stadium",
+    location: "Jaipur, IND",
+    format: "T20",
+    isHome: false 
+  },
+  { 
+    id: 7, 
+    date: '2026-04-12T19:30:00', 
+    label: "IPL Match 4", 
+    opponent: "Mumbai Indians",
+    venue: "Wankhede Stadium",
+    location: "Mumbai, IND",
+    format: "T20",
+    isHome: false 
+  },
+  { 
+    id: 8, 
+    date: '2026-04-16T19:30:00', 
+    label: "IPL Match 5", 
+    opponent: "Kolkata Knight Riders",
+    venue: "M. Chinnaswamy Stadium",
+    location: "Bengaluru, IND",
+    format: "T20",
+    isHome: true 
+  },
+  { 
+    id: 9, 
+    date: '2026-04-20T19:30:00', 
+    label: "IPL Match 6", 
+    opponent: "Lucknow Super Giants",
+    venue: "Ekana Cricket Stadium",
+    location: "Lucknow, IND",
+    format: "T20",
+    isHome: false 
+  },
+  { 
+    id: 10, 
+    date: '2026-04-24T19:30:00', 
+    label: "IPL Match 7", 
+    opponent: "Delhi Capitals",
+    venue: "M. Chinnaswamy Stadium",
+    location: "Bengaluru, IND",
+    format: "T20",
+    isHome: true 
+  },
+  { 
+    id: 11, 
+    date: '2026-04-28T19:30:00', 
+    label: "IPL Match 8", 
+    opponent: "Punjab Kings",
+    venue: "PCA Stadium",
+    location: "Mohali, IND",
+    format: "T20",
+    isHome: false 
+  },
+  { 
+    id: 12, 
+    date: '2026-05-02T15:30:00', // Afternoon Game
+    label: "IPL Match 9", 
+    opponent: "Gujarat Titans",
+    venue: "M. Chinnaswamy Stadium",
+    location: "Bengaluru, IND",
+    format: "T20",
+    isHome: true 
+  },
+  { 
+    id: 13, 
+    date: '2026-05-06T19:30:00', 
+    label: "IPL Match 10", 
+    opponent: "Chennai Super Kings",
+    venue: "M. A. Chidambaram Stadium",
+    location: "Chennai, IND",
+    format: "T20",
+    isHome: false 
+  },
+  { 
+    id: 14, 
+    date: '2026-05-10T19:30:00', 
+    label: "IPL Match 11", 
+    opponent: "Mumbai Indians",
+    venue: "M. Chinnaswamy Stadium",
+    location: "Bengaluru, IND",
+    format: "T20",
+    isHome: true 
+  },
+  { 
+    id: 15, 
+    date: '2026-05-14T19:30:00', 
+    label: "IPL Match 12", 
+    opponent: "Sunrisers Hyderabad",
+    venue: "Rajiv Gandhi International Stadium",
+    location: "Hyderabad, IND",
+    format: "T20",
+    isHome: false 
+  },
+  { 
+    id: 16, 
+    date: '2026-05-18T19:30:00', 
+    label: "IPL Match 13", 
+    opponent: "Kolkata Knight Riders",
+    venue: "Eden Gardens",
+    location: "Kolkata, IND",
+    format: "T20",
+    isHome: false 
+  },
+  { 
+    id: 17, 
+    date: '2026-05-22T19:30:00', 
+    label: "IPL Match 14", 
+    opponent: "Punjab Kings",
+    venue: "M. Chinnaswamy Stadium",
+    location: "Bengaluru, IND",
+    format: "T20",
+    isHome: true 
+  }
 ];
 
 export default function Hero() {
